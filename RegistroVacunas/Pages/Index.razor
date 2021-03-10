@@ -7,8 +7,8 @@
 
 <h1>Registro de vacunas</h1>
 
-<p>Digite su cedula: <input type="text" @bind="@cedula"></p>
-<button class="btn btn-info" @onclick="ValidarCedula">Buscar</button>
+<p>Digite su cedula: <input type="text" @bind="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
+
 @if (validacion == 1)
 {
     if (nombre != "")
@@ -16,21 +16,106 @@
         <p>Nombre: @nombre</p>
         <p>Apellido: @apellido</p>
         <p>cedula: @cedula</p>
-        <p>Fecha: @fecha</p>
-        <p>Digite su Telefono: <input type="text" @bind="@cedula"></p>
-        <p>Digite su cedula: <input type="text" @bind="@cedula"></p>
-        <p>Digite su cedula: <input type="text" @bind="@cedula"></p>
+        <p>Fecha de nacimiento: @fecha</p>
+        <p>Digite su Telefono: <input type="text" @bind="@telefono"></p>
+        <p>
+            Vacuna  <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected>Vacunado</option>
+                <option value="1">Si</option>
+                <option value="2">No</option>
+            </select>
+        </p>
+        <p>Provincia: <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+    <option selected>Provincias</option>
+    <option value="1">Azua</option>
+    <option value="2">Bahoruco</option>
+    <option value="3">Barahona</option>
+    <option value="1">Dajabon</option>
+    <option value="2">Distrito Nacional</option>
+    <option value="3">Duarte</option>
+    <option value="1">Elias Piña</option>
+    <option value="2">El Seibo</option>
+    <option value="3">Espaillat</option>
+    <option value="1">Hato Mayor</option>
+    <option value="2">Hermanas Mirabal</option>
+    <option value="1">Independencia</option>
+    <option value="2">La Altagracia</option>
+    <option value="3">La Romana</option>
+    <option value="3">La Vega</option>
+    <option value="1">Maria Trinidad Sanchez</option>
+    <option value="2">Monseñor Nouel</option>
+    <option value="3">Monte Cristi</option>
+    <option value="1">Monte Plata</option>
+    <option value="2">Pedernales</option>
+    <option value="1">Peravia</option>
+    <option value="2">Puerto Plata</option>
+    <option value="3">Samana</option>
+    <option value="1">Sanchez Ramirez</option>
+    <option value="2">San Cristobal</option>
+    <option value="3">San Jose de Ocoa</option>
+    <option value="3">San Juan</option>
+    <option value="1">San Pedro de Macoris</option>
+    <option value="2">Santiago</option>
+    <option value="1">Santiago Rodrigez</option>
+    <option value="2">Santo Domingo</option>
+    <option value="1">Valverde</option>
+
+</select></p>
+<button class="btn btn-secondary">Registrar</button>
 
     }
     else
     {
         <p>cedula: @cedula</p>
-        <p>Digite su nombre: <input type="text" @bind="@cedula"></p>
-        <p>Digite su Apellido: <input type="text" @bind="@cedula"></p>
-        <p>Digite su Fecha: <input type="text" @bind="@cedula"></p>
-        <p>Digite su Telefono: <input type="text" @bind="@cedula"></p>
-        <p>Digite su cedula: <input type="text" @bind="@cedula"></p>
-        <p>Digite su cedula: <input type="text" @bind="@cedula"></p>
+        <p>Digite su nombre: <input type="text" @bind="@nombre"></p>
+        <p>Digite su Apellido: <input type="text" @bind="@apellido"></p>
+        <p>Digite su Fecha: <input type="text" @bind="@fecha"></p>
+        <p>Digite su Telefono: <input type="text" @bind="@telefono"></p>
+        <p>
+            Vacuna<select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected>Vacunado</option>
+                <option value="1">Si</option>
+                <option value="2">No</option>
+            </select>
+        </p>
+        <p>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected>Provincias</option>
+                <option value="1">Azua</option>
+                <option value="2">Bahoruco</option>
+                <option value="3">Barahona</option>
+                <option value="1">Dajabon</option>
+                <option value="2">Distrito Nacional</option>
+                <option value="3">Duarte</option>
+                <option value="1">Elias Piña</option>
+                <option value="2">El Seibo</option>
+                <option value="3">Espaillat</option>
+                <option value="1">Hato Mayor</option>
+                <option value="2">Hermanas Mirabal</option>
+                <option value="1">Independencia</option>
+                <option value="2">La Altagracia</option>
+                <option value="3">La Romana</option>
+                <option value="3">La Vega</option>
+                <option value="1">Maria Trinidad Sanchez</option>
+                <option value="2">Monseñor Nouel</option>
+                <option value="3">Monte Cristi</option>
+                <option value="1">Monte Plata</option>
+                <option value="2">Pedernales</option>
+                <option value="1">Peravia</option>
+                <option value="2">Puerto Plata</option>
+                <option value="3">Samana</option>
+                <option value="1">Sanchez Ramirez</option>
+                <option value="2">San Cristobal</option>
+                <option value="3">San Jose de Ocoa</option>
+                <option value="3">San Juan</option>
+                <option value="1">San Pedro de Macoris</option>
+                <option value="2">Santiago</option>
+                <option value="1">Santiago Rodrigez</option>
+                <option value="2">Santo Domingo</option>
+                <option value="1">Valverde</option>
+
+            </select>
+        </p>
 
     }
 
@@ -56,6 +141,9 @@ else if (validacion == 2)
     string nombre = "";
     string apellido;
     string fecha;
+    string telefono;
+    int vacuna;
+    string provincia;
     CedulaApiResponse res;
 
     int validacion;
@@ -72,7 +160,7 @@ else if (validacion == 2)
         {
             try
             {
-                var cedual = Int32.Parse(cedula);
+                var cedual = Int64.Parse(cedula);
             }
             catch (FormatException e)
             {
