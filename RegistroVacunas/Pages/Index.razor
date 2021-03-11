@@ -8,7 +8,7 @@
 
 <h1>Registro de vacunas</h1>
 
-<p>Digite su cedula: <input type="text" @bind="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
+<p>Digite su cedula: <input type="text" @bind="@identidad"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
 
 
@@ -151,7 +151,7 @@
             <th>Vacunas</th>
             <th>Primera dosis</th>
             <th>Segunda dosis</th>
-
+            <th></th>
             </thead>
             <tbody>
 
@@ -161,6 +161,12 @@
                         <td>@p["vacuna"]</td>
                         <td>@p["dosis1"]</td>
                         <td>@p["dosis2"]</td>
+
+                        @if(@p["dosis2"] == "No")
+                        {
+                            <td><button>Dar segunda dosis</button></td>
+                        }
+                        
                     </tr>
                 }
             </tbody>
@@ -185,6 +191,7 @@ else if (validacion == 2)
     Dictionary<string, string> diccionario = new Dictionary<string, string>();
     List<Dictionary<string, string>> datos = new List<Dictionary<string, string>>();
 
+    string identidad;
     string cedula;
     int producto;
     int numeroValidacion;
@@ -211,6 +218,9 @@ else if (validacion == 2)
 
     void ValidarCedula()
     {
+        cedula = "";
+        cedula = identidad;
+        identidad = "";
         if (cedula.Length != 11)
         {
             validacion = 2;
@@ -309,15 +319,26 @@ else if (validacion == 2)
                         var dic = new Dictionary<string, string>();
                         dic.Add("vacuna", i.vacunas);
                         dic.Add("dosis1", i.dosis1.ToString());
-                        dic.Add("dosis2", i.dosis2.ToString());
+                        if (i.dosis2.ToString() == "")
+                        {
+                            dic.Add("dosis2", "No");
+                        }
+                        else
+                        {
+                            dic.Add("dosis2", i.dosis2.ToString());
+                        }
+
                         datos.Add(dic);
 
+
+
                     }
+
                     existe = 1;
                 }
 
                 ReadApi();
-            }
+             }
             else
             {
                 validacion = 2;
@@ -361,37 +382,37 @@ else if (validacion == 2)
                                id = g.Max(i => i.c.Id),
                            }).Count();
 
-            user.Cedula = cedula;
-            user.Nombre = nombre;
-            user.Apellido = apellido;
-            user.FechaNacimiento = fecha;
-            user.Telefono = telefono;
-            user.Provincia = provincia;
+        user.Cedula = cedula;
+        user.Nombre = nombre;
+        user.Apellido = apellido;
+        user.FechaNacimiento = fecha;
+        user.Telefono = telefono;
+        user.Provincia = provincia;
 
-            db.Add(user);
-            db.SaveChanges();
+        db.Add(user);
+        db.SaveChanges();
 
-            var query = from c in db.Client
-                        where c.Cedula == cedula
-                        group new { c } by new { c.Id } into g
-                        select new
-                        {
-                            id = g.Max(i => i.c.Id),
-                        };
+        var query = from c in db.Client
+                    where c.Cedula == cedula
+                    group new { c } by new { c.Id } into g
+                    select new
+                    {
+                        id = g.Max(i => i.c.Id),
+                    };
 
-            vacunas.FirstDosis = first_dosis;
-            vacunas.SecondDosis = null;
-            vacunas.Type = vacuna;
-            var dic = new Dictionary<string, int>();
-            foreach (var i in query)
-            {
+        vacunas.FirstDosis = first_dosis;
+        vacunas.SecondDosis = null;
+        vacunas.Type = vacuna;
+        var dic = new Dictionary<string, int>();
+        foreach (var i in query)
+        {
 
-                dic.Add("id", i.id);
-            }
-            vacunas.IdClient = dic["id"];
-            db.Add(vacunas);
-            db.SaveChanges();
-        
+            dic.Add("id", i.id);
+        }
+        vacunas.IdClient = dic["id"];
+        db.Add(vacunas);
+        db.SaveChanges();
+
     }
 }
 
