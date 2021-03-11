@@ -10,127 +10,165 @@
 
 <p>Digite su cedula: <input type="text" @bind="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
+
+
 @if (validacion == 1)
 {
-    if (nombre != "")
+    @if (existe == 0)
     {
-        <p>Nombre: @nombre</p>
-        <p>Apellido: @apellido</p>
-        <p>cedula: @cedula</p>
-        <p>Fecha de nacimiento: @fecha</p>
-        <p>Digite su Telefono: <input type="text" @bind="@telefono"></p>
-        <p>
-            Vacuna  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" @bind="vacuna">
-                <option selected>Vacunas</option>
-                <option value="Sarampion">Sarampion</option>
-                <option value="Rotavirus">Rotavirus</option>
-                <option value="viruela">Viruela</option>
-                <option value="Fiebre amarilla">Fiebre Amarilla</option>
-                <option value="Rabia">Rabia</option>
-                <option value="Polio">Polio</option>
-                <option value="Gripe">gripe</option>
-                <option value="Hepatitis A">Hepatitis A</option>
-            </select>
-        </p>
-        <p>Provincia: <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="provincia">
-            <option selected>Provincias</option>
-            <option value="Azua-">Azua</option>
-            <option value="Bahoruco">Bahoruco</option>
-            <option value="Barahona">Barahona</option>
-            <option value="Dajabon">Dajabon</option>
-            <option value="Distrito Nacional">Distrito Nacional</option>
-            <option value="Duarte">Duarte</option>
-            <option value="Elias Piña">Elias Piña</option>
-            <option value="El Seibo">El Seibo</option>
-            <option value="Espaillat">Espaillat</option>
-            <option value="Hato Mayor">Hato Mayor</option>
-            <option value="Hermanas Mirabal">Hermanas Mirabal</option>
-            <option value="Independencia">Independencia</option>
-            <option value="La Altagracia">La Altagracia</option>
-            <option value="La Romana">La Romana</option>
-            <option value="La Vega">La Vega</option>
-            <option value="Maria Trinidad Sanchez">Maria Trinidad Sanchez</option>
-            <option value="Monseñor Nouel">Monseñor Nouel</option>
-            <option value="Monte Cristi">Monte Cristi</option>
-            <option value="Monte Plata">Monte Plata</option>
-            <option value="Pedernales">Pedernales</option>
-            <option value="Peravia">Peravia</option>
-            <option value="Puerto Plata">Puerto Plata</option>
-            <option value="Samana">Samana</option>
-            <option value="Sanchez Ramirez">Sanchez Ramirez</option>
-            <option value="San Cristobal">San Cristobal</option>
-            <option value="San Jose de Ocoa">San Jose de Ocoa</option>
-            <option value="3">San Juan</option>
-            <option value="San Juan">San Pedro de Macoris</option>
-            <option value="Santiago">Santiago</option>
-            <option value="Santiago Rodrigez">Santiago Rodrigez</option>
-            <option value="Santo Domingo">Santo Domingo</option>
-            <option value="Valverde">Valverde</option>
+        if (nombre != "")
+        {
+            <p>Nombre: @nombre</p>
+            <p>Apellido: @apellido</p>
+            <p>cedula: @cedula</p>
+            <p>Fecha de nacimiento: @fecha</p>
+            <p>Digite su Telefono: <input type="text" @bind="@telefono"></p>
+            <p>
+                Vacuna  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" @bind="vacuna">
+                    <option selected>Vacunas</option>
+                    <option value="Sarampion">Sarampion</option>
+                    <option value="Rotavirus">Rotavirus</option>
+                    <option value="viruela">Viruela</option>
+                    <option value="Fiebre amarilla">Fiebre Amarilla</option>
+                    <option value="Rabia">Rabia</option>
+                    <option value="Polio">Polio</option>
+                    <option value="Gripe">gripe</option>
+                    <option value="Hepatitis A">Hepatitis A</option>
+                </select>
+            </p>
+            <p>
+                Provincia: <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="provincia">
+                    <option selected>Provincias</option>
+                    <option value="Azua-">Azua</option>
+                    <option value="Bahoruco">Bahoruco</option>
+                    <option value="Barahona">Barahona</option>
+                    <option value="Dajabon">Dajabon</option>
+                    <option value="Distrito Nacional">Distrito Nacional</option>
+                    <option value="Duarte">Duarte</option>
+                    <option value="Elias Piña">Elias Piña</option>
+                    <option value="El Seibo">El Seibo</option>
+                    <option value="Espaillat">Espaillat</option>
+                    <option value="Hato Mayor">Hato Mayor</option>
+                    <option value="Hermanas Mirabal">Hermanas Mirabal</option>
+                    <option value="Independencia">Independencia</option>
+                    <option value="La Altagracia">La Altagracia</option>
+                    <option value="La Romana">La Romana</option>
+                    <option value="La Vega">La Vega</option>
+                    <option value="Maria Trinidad Sanchez">Maria Trinidad Sanchez</option>
+                    <option value="Monseñor Nouel">Monseñor Nouel</option>
+                    <option value="Monte Cristi">Monte Cristi</option>
+                    <option value="Monte Plata">Monte Plata</option>
+                    <option value="Pedernales">Pedernales</option>
+                    <option value="Peravia">Peravia</option>
+                    <option value="Puerto Plata">Puerto Plata</option>
+                    <option value="Samana">Samana</option>
+                    <option value="Sanchez Ramirez">Sanchez Ramirez</option>
+                    <option value="San Cristobal">San Cristobal</option>
+                    <option value="San Jose de Ocoa">San Jose de Ocoa</option>
+                    <option value="3">San Juan</option>
+                    <option value="San Juan">San Pedro de Macoris</option>
+                    <option value="Santiago">Santiago</option>
+                    <option value="Santiago Rodrigez">Santiago Rodrigez</option>
+                    <option value="Santo Domingo">Santo Domingo</option>
+                    <option value="Valverde">Valverde</option>
 
-        </select></p>
-<button class="btn btn-secondary" @onclick="Registrar">Registrar</button>
+                </select>
+            </p>
+            <button class="btn btn-secondary" @onclick="Registrar">Registrar</button>
 
+        }
+        else
+        {
+            <p>cedula: @cedula</p>
+            <p>Digite su nombre: <input type="text" @bind="@nombre"></p>
+            <p>Digite su Apellido: <input type="text" @bind="@apellido"></p>
+            <p>Digite su Fecha: <input type="text" @bind="@fecha"></p>
+            <p>Digite su Telefono: <input type="text" @bind="@telefono"></p>
+            <p>
+                Vacuna<select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="vacuna">
+                    <option selected>Vacunado</option>
+                    <option value="Sarampion">Sarampion</option>
+                    <option value="Rotavirus">Rotavirus</option>
+                    <option value="viruela">Viruela</option>
+                    <option value="Fiebre amarilla">Fiebre Amarilla</option>
+                    <option value="Rabia">Rabia</option>
+                    <option value="Polio">Polio</option>
+                    <option value="Gripe">gripe</option>
+                    <option value="Hepatitis A">Hepatitis A</option>
+                </select>
+            </p>
+            <p>
+                <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="provincia">
+                    <option selected>Provincias</option>
+                    <option value="Azua-">Azua</option>
+                    <option value="Bahoruco">Bahoruco</option>
+                    <option value="Barahona">Barahona</option>
+                    <option value="Dajabon">Dajabon</option>
+                    <option value="Distrito Nacional">Distrito Nacional</option>
+                    <option value="Duarte">Duarte</option>
+                    <option value="Elias Piña">Elias Piña</option>
+                    <option value="El Seibo">El Seibo</option>
+                    <option value="Espaillat">Espaillat</option>
+                    <option value="Hato Mayor">Hato Mayor</option>
+                    <option value="Hermanas Mirabal">Hermanas Mirabal</option>
+                    <option value="Independencia">Independencia</option>
+                    <option value="La Altagracia">La Altagracia</option>
+                    <option value="La Romana">La Romana</option>
+                    <option value="La Vega">La Vega</option>
+                    <option value="Maria Trinidad Sanchez">Maria Trinidad Sanchez</option>
+                    <option value="Monseñor Nouel">Monseñor Nouel</option>
+                    <option value="Monte Cristi">Monte Cristi</option>
+                    <option value="Monte Plata">Monte Plata</option>
+                    <option value="Pedernales">Pedernales</option>
+                    <option value="Peravia">Peravia</option>
+                    <option value="Puerto Plata">Puerto Plata</option>
+                    <option value="Samana">Samana</option>
+                    <option value="Sanchez Ramirez">Sanchez Ramirez</option>
+                    <option value="San Cristobal">San Cristobal</option>
+                    <option value="San Jose de Ocoa">San Jose de Ocoa</option>
+                    <option value="3">San Juan</option>
+                    <option value="San Juan">San Pedro de Macoris</option>
+                    <option value="Santiago">Santiago</option>
+                    <option value="Santiago Rodrigez">Santiago Rodrigez</option>
+                    <option value="Santo Domingo">Santo Domingo</option>
+                    <option value="Valverde">Valverde</option>
+
+                </select>
+            </p>
+
+        }
     }
     else
     {
-        <p>cedula: @cedula</p>
-        <p>Digite su nombre: <input type="text" @bind="@nombre"></p>
-        <p>Digite su Apellido: <input type="text" @bind="@apellido"></p>
-        <p>Digite su Fecha: <input type="text" @bind="@fecha"></p>
-        <p>Digite su Telefono: <input type="text" @bind="@telefono"></p>
-        <p>
-            Vacuna<select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="vacuna">
-                <option selected>Vacunado</option>
-                <option value="Sarampion">Sarampion</option>
-                <option value="Rotavirus">Rotavirus</option>
-                <option value="viruela">Viruela</option>
-                <option value="Fiebre amarilla">Fiebre Amarilla</option>
-                <option value="Rabia">Rabia</option>
-                <option value="Polio">Polio</option>
-                <option value="Gripe">gripe</option>
-                <option value="Hepatitis A">Hepatitis A</option>
-            </select>
-        </p>
-        <p>
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="provincia">
-                <option selected>Provincias</option>
-                <option value="Azua-">Azua</option>
-                <option value="Bahoruco">Bahoruco</option>
-                <option value="Barahona">Barahona</option>
-                <option value="Dajabon">Dajabon</option>
-                <option value="Distrito Nacional">Distrito Nacional</option>
-                <option value="Duarte">Duarte</option>
-                <option value="Elias Piña">Elias Piña</option>
-                <option value="El Seibo">El Seibo</option>
-                <option value="Espaillat">Espaillat</option>
-                <option value="Hato Mayor">Hato Mayor</option>
-                <option value="Hermanas Mirabal">Hermanas Mirabal</option>
-                <option value="Independencia">Independencia</option>
-                <option value="La Altagracia">La Altagracia</option>
-                <option value="La Romana">La Romana</option>
-                <option value="La Vega">La Vega</option>
-                <option value="Maria Trinidad Sanchez">Maria Trinidad Sanchez</option>
-                <option value="Monseñor Nouel">Monseñor Nouel</option>
-                <option value="Monte Cristi">Monte Cristi</option>
-                <option value="Monte Plata">Monte Plata</option>
-                <option value="Pedernales">Pedernales</option>
-                <option value="Peravia">Peravia</option>
-                <option value="Puerto Plata">Puerto Plata</option>
-                <option value="Samana">Samana</option>
-                <option value="Sanchez Ramirez">Sanchez Ramirez</option>
-                <option value="San Cristobal">San Cristobal</option>
-                <option value="San Jose de Ocoa">San Jose de Ocoa</option>
-                <option value="3">San Juan</option>
-                <option value="San Juan">San Pedro de Macoris</option>
-                <option value="Santiago">Santiago</option>
-                <option value="Santiago Rodrigez">Santiago Rodrigez</option>
-                <option value="Santo Domingo">Santo Domingo</option>
-                <option value="Valverde">Valverde</option>
+        <h2>@nombre @apellido @cedula</h2>
 
-            </select>
-        </p>
+        <p>Telefono @diccionario["telefono"]</p>
+        <p>Provincia: @diccionario["provincia"]</p>
+        <p>Fecha de nacimiento: @diccionario["fecha"]</p>
+
+        <table class="table table-striped">
+            <thead>
+            <th>Vacunas</th>
+            <th>Primera dosis</th>
+            <th>Segunda dosis</th>
+
+            </thead>
+            <tbody>
+
+                @foreach (Dictionary<string, string> p in datos)
+                {
+                    <tr>
+                        <td>@p["vacuna"]</td>
+                        <td>@p["dosis1"]</td>
+                        <td>@p["dosis2"]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
 
     }
+
 
 }
 else if (validacion == 2)
@@ -140,8 +178,12 @@ else if (validacion == 2)
 
 
 @code {
+    int existe = 0;
     registro_vacunasContext db = new registro_vacunasContext();
+    Client user = new Client();
     Vacunas vacunas = new Vacunas();
+    Dictionary<string, string> diccionario = new Dictionary<string, string>();
+    List<Dictionary<string, string>> datos = new List<Dictionary<string, string>>();
 
     string cedula;
     int producto;
@@ -154,7 +196,7 @@ else if (validacion == 2)
     string link = "https://api.adamix.net/apec/cedula/";
     string api;
     string json;
-    string nombre ="";
+    string nombre = "";
     string apellido;
     string fecha;
     string telefono;
@@ -215,6 +257,65 @@ else if (validacion == 2)
             if (numeroValidar == numeroValidacion)
             {
                 validacion = 1;
+
+                var queryselect = (from c in db.Client
+                                   where c.Cedula == cedula
+                                   group new { c } by new { c.Id } into g
+                                   select new
+                                   {
+                                       id = g.Max(i => i.c.Id),
+                                   }).Count();
+
+
+                if (queryselect != 0)
+                {
+
+                    var querymostrar = from c in db.Client
+                                       where c.Cedula == cedula
+                                       group new { c } by new { c.Id } into g
+                                       select new
+                                       {
+                                           telefono = g.Max(i => i.c.Telefono),
+                                           provincia = g.Max(i => i.c.Provincia),
+                                           fecha = g.Max(i => i.c.FechaNacimiento),
+                                           id = g.Max(i => i.c.Id)
+
+                                       };
+                    foreach (var i in querymostrar)
+                    {
+
+
+                        diccionario.Add("telefono", i.telefono);
+                        diccionario.Add("provincia", i.provincia);
+                        diccionario.Add("fecha", i.fecha);
+                        diccionario.Add("Id", i.id.ToString());
+
+                    }
+
+
+                    var queryvacunas = from v in db.Vacunas
+                                       where v.IdClient == Int32.Parse(diccionario["Id"])
+                                       group new { v } by new { v.Id } into g
+                                       select new
+                                       {
+                                           vacunas = g.Max(i => i.v.Type),
+                                           dosis1 = g.Max(i => i.v.FirstDosis),
+                                           dosis2 = g.Max(i => i.v.SecondDosis),
+
+                                       };
+
+                    foreach (var i in queryvacunas)
+                    {
+                        var dic = new Dictionary<string, string>();
+                        dic.Add("vacuna", i.vacunas);
+                        dic.Add("dosis1", i.dosis1.ToString());
+                        dic.Add("dosis2", i.dosis2.ToString());
+                        datos.Add(dic);
+
+                    }
+                    existe = 1;
+                }
+
                 ReadApi();
             }
             else
@@ -252,16 +353,44 @@ else if (validacion == 2)
 
     void Registrar()
     {
-        vacunas.cedula = cedula;
-        vacunas.nombre = nombre;
-        vacunas.apellido = apellido;
-        vacunas.fecha = fecha;
-        vacunas.telefono = telefono;
-        vacunas.vacuna = vacuna;
-        vacunas.provincia = provincia;
-        vacunas.first_dosis = first_dosis;
-        db.Add(vacunas);
-        db.SaveChanges();
+        var queryselect = (from c in db.Client
+                           where c.Cedula == cedula
+                           group new { c } by new { c.Id } into g
+                           select new
+                           {
+                               id = g.Max(i => i.c.Id),
+                           }).Count();
+
+            user.Cedula = cedula;
+            user.Nombre = nombre;
+            user.Apellido = apellido;
+            user.FechaNacimiento = fecha;
+            user.Telefono = telefono;
+            user.Provincia = provincia;
+
+            db.Add(user);
+            db.SaveChanges();
+
+            var query = from c in db.Client
+                        where c.Cedula == cedula
+                        group new { c } by new { c.Id } into g
+                        select new
+                        {
+                            id = g.Max(i => i.c.Id),
+                        };
+
+            vacunas.FirstDosis = first_dosis;
+            vacunas.SecondDosis = null;
+            vacunas.Type = vacuna;
+            var dic = new Dictionary<string, int>();
+            foreach (var i in query)
+            {
+
+                dic.Add("id", i.id);
+            }
+            vacunas.IdClient = dic["id"];
+            db.Add(vacunas);
+            db.SaveChanges();
         
     }
 }

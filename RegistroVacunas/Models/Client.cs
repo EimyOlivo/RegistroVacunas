@@ -7,17 +7,21 @@ using System.Collections.Generic;
 
 namespace RegistroVacunas.Models
 {
-    public partial class Registro
+    public partial class Client
     {
+        public Client()
+        {
+            Vacunas = new HashSet<Vacunas>();
+        }
+
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Cedula { get; set; }
         public string Telefono { get; set; }
-        public TimeSpan FechaNacimiento { get; set; }
+        public string FechaNacimiento { get; set; }
         public string Provincia { get; set; }
-        public bool Vacuna { get; set; }
-        public TimeSpan _1eraDosis { get; set; }
-        public TimeSpan? _2daDosis { get; set; }
+
+        public virtual ICollection<Vacunas> Vacunas { get; set; }
     }
 }

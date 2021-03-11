@@ -19,7 +19,8 @@ namespace RegistroVacunas.Models
         {
         }
 
-        public virtual DbSet<Registro> Registro { get; set; }
+        public virtual DbSet<Client> Client { get; set; }
+        public virtual DbSet<Vacunas> Vacunas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,9 +33,9 @@ namespace RegistroVacunas.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Registro>(entity =>
+            modelBuilder.Entity<Client>(entity =>
             {
-                entity.ToTable("registro");
+                entity.ToTable("client");
 
                 entity.Property(e => e.Id).HasColumnType("int(10)");
 
@@ -46,13 +47,16 @@ namespace RegistroVacunas.Models
 
                 entity.Property(e => e.Cedula)
                     .IsRequired()
-                    .HasColumnType("tinytext")
+                    .HasColumnType("text")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
 
                 entity.Property(e => e.FechaNacimiento)
+                    .IsRequired()
                     .HasColumnName("Fecha_Nacimiento")
-                    .HasColumnType("time");
+                    .HasColumnType("text")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -71,14 +75,37 @@ namespace RegistroVacunas.Models
                     .HasColumnType("tinytext")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_general_ci");
+            });
 
-                entity.Property(e => e._1eraDosis)
-                    .HasColumnName("1era_Dosis")
-                    .HasColumnType("time");
+            modelBuilder.Entity<Vacunas>(entity =>
+            {
+                entity.ToTable("vacunas");
 
-                entity.Property(e => e._2daDosis)
-                    .HasColumnName("2da_Dosis")
-                    .HasColumnType("time");
+                entity.HasIndex(e => e.IdClient)
+                    .HasName("FK_Id_cliente");
+
+                entity.Property(e => e.Id).HasColumnType("int(10)");
+
+                entity.Property(e => e.FirstDosis)
+                    .HasColumnName("firstDosis")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdClient).HasColumnType("int(10)");
+
+                entity.Property(e => e.SecondDosis).HasColumnType("datetime");
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasColumnName("type")
+                    .HasColumnType("tinytext")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.HasOne(d => d.IdClientNavigation)
+                    .WithMany(p => p.Vacunas)
+                    .HasForeignKey(d => d.IdClient)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Id_cliente");
             });
 
             OnModelCreatingPartial(modelBuilder);
