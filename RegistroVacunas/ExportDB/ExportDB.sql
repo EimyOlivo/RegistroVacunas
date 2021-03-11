@@ -16,25 +16,39 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`registro_vacunas` /*!40100 DEFAULT CHAR
 
 USE `registro_vacunas`;
 
-/*Table structure for table `registro` */
+/*Table structure for table `client` */
 
-DROP TABLE IF EXISTS `registro`;
+DROP TABLE IF EXISTS `client`;
 
-CREATE TABLE `registro` (
+CREATE TABLE `client` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
-  `Nombre` tinytext COLLATE utf8mb4_general_ci NOT NULL,
-  `Apellido` tinytext COLLATE utf8mb4_general_ci NOT NULL,
-  `Cedula` tinytext COLLATE utf8mb4_general_ci NOT NULL,
-  `Telefono` tinytext COLLATE utf8mb4_general_ci NOT NULL,
-  `Fecha_Nacimiento` time NOT NULL,
-  `Provincia` text COLLATE utf8mb4_general_ci NOT NULL,
-  `Vacuna` tinyint(1) NOT NULL,
-  `1era_Dosis` time NOT NULL,
-  `2da_Dosis` time DEFAULT NULL,
+  `Nombre` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Apellido` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Cedula` text COLLATE utf8mb4_general_ci NOT NULL,
+  `Telefono` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Fecha_Nacimiento` text COLLATE utf8mb4_general_ci NOT NULL,
+  `Provincia` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-/*Data for the table `registro` */
+/*Data for the table `client` */
+
+/*Table structure for table `vacunas` */
+
+DROP TABLE IF EXISTS `vacunas`;
+
+CREATE TABLE `vacunas` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `IdClient` int(10) NOT NULL,
+  `type` tinytext COLLATE utf8mb4_general_ci NOT NULL,
+  `firstDosis` datetime NOT NULL,
+  `SecondDosis` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FK_Id_cliente` (`IdClient`),
+  CONSTRAINT `FK_Id_cliente` FOREIGN KEY (`IdClient`) REFERENCES `client` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `vacunas` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
