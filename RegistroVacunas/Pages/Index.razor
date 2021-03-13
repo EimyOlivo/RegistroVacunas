@@ -4,17 +4,15 @@
 @using System.Net;
 @using RegistroVacunas.Data;
 @using Newtonsoft.Json;
-@using Models;
+@using Models
 
 <h1>Registro de vacunas</h1>
 
-<p>Digite su cedula: <input type="text" @bind="@identidad"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
-
-
+<p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
 @if (validacion == 1)
 {
-    @if (existe == 0)
+    if (existe == "usuarioNoexistente")
     {
         if (nombre != "")
         {
@@ -75,7 +73,6 @@
                 </select>
             </p>
             <button class="btn btn-secondary" @onclick="Registrar">Registrar</button>
-
         }
         else
         {
@@ -135,14 +132,16 @@
 
                 </select>
             </p>
+            <button class="btn btn-secondary" @onclick="Registrar">Registrar</button>
 
         }
-    }
-    else
-    {
-        <h2>@nombre @apellido @cedula</h2>
 
-        <p>Telefono @diccionario["telefono"]</p>
+    }
+    else if (existe == "usuarioFalta2daSDosis")
+    {
+        <h2>@diccionario["nombre"] @diccionario["apellido"] @cedula</h2>
+
+        <p>Telefono: @diccionario["telefono"]</p>
         <p>Provincia: @diccionario["provincia"]</p>
         <p>Fecha de nacimiento: @diccionario["fecha"]</p>
 
@@ -154,44 +153,75 @@
             <th></th>
             </thead>
             <tbody>
-
-                @foreach (Dictionary<string, string> p in datos)
+                @foreach (Dictionary<string, string> diccionario in datos)
                 {
                     <tr>
-                        <td>@p["vacuna"]</td>
-                        <td>@p["dosis1"]</td>
-                        <td>@p["dosis2"]</td>
-
-                        @if(@p["dosis2"] == "No")
-                        {
-                            <td><button>Dar segunda dosis</button></td>
-                        }
-                        
+                        <td>@diccionario["vacuna"]</td>
+                        <td>@diccionario["dosis1"]</td>
+                        <td>@diccionario["dosis2"]</td>
                     </tr>
                 }
+
+            </tbody>
+        </table>
+
+        <p>
+            Vacuna  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" @bind="vacuna">
+                <option selected>Vacunas</option>
+                <option value="Sarampion">Sarampion</option>
+                <option value="Rotavirus">Rotavirus</option>
+                <option value="viruela">Viruela</option>
+                <option value="Fiebre amarilla">Fiebre Amarilla</option>
+                <option value="Rabia">Rabia</option>
+                <option value="Polio">Polio</option>
+                <option value="Gripe">gripe</option>
+                <option value="Hepatitis A">Hepatitis A</option>
+            </select>
+        </p>
+        <button class="btn btn-secondary" @onclick="vacunar">Registrar</button>
+
+    }
+    else if (existe == "usuarioLleno")
+    {
+        <p class="alert-danger">Este cliente tiene sus dos dosis</p>
+        <h2>@nombre @apellido @diccionario["nombre"] @diccionario["apellido"] @cedula </h2>
+        <p>Telefono: @diccionario["telefono"]</p>
+        <p>Provincia: @diccionario["provincia"]</p>
+        <p>Fecha de nacimiento: @diccionario["fecha"]</p>
+
+        <table class="table table-striped">
+            <thead>
+            <th>Vacunas</th>
+            <th>Primera dosis</th>
+            <th>Segunda dosis</th>
+            <th></th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@diccionario["vacuna"]</td>
+                    <td>@diccionario["dosis1"]</td>
+                    <td>@diccionario["dosis2"]</td>
+                </tr>
+
             </tbody>
         </table>
 
 
     }
-
-
 }
 else if (validacion == 2)
 {
-    <p>Esta cedula no es dominicana</p>
+    <p class="alert-danger">La cedula digitada no es dominicana</p>
 }
 
-
 @code {
-    int existe = 0;
+    string existe;
     registro_vacunasContext db = new registro_vacunasContext();
     Client user = new Client();
-    Vacunas vacunas = new Vacunas();
+
     Dictionary<string, string> diccionario = new Dictionary<string, string>();
     List<Dictionary<string, string>> datos = new List<Dictionary<string, string>>();
 
-    string identidad;
     string cedula;
     int producto;
     int numeroValidacion;
@@ -218,9 +248,8 @@ else if (validacion == 2)
 
     void ValidarCedula()
     {
-        cedula = "";
-        cedula = identidad;
-        identidad = "";
+        sumatotal = 0;
+        multiplicacion = 0;
         if (cedula.Length != 11)
         {
             validacion = 2;
@@ -279,71 +308,51 @@ else if (validacion == 2)
 
                 if (queryselect != 0)
                 {
+                    existe = "usuarioFalta2daSDosis";
 
                     var querymostrar = from c in db.Client
+                                       join v in db.Vacunas on c.Id equals v.IdClient
                                        where c.Cedula == cedula
-                                       group new { c } by new { c.Id } into g
+                                       group new { c, v } by new { c.Id } into g
                                        select new
                                        {
+                                           nombre = g.Max(i => i.c.Nombre),
+                                           apellido = g.Max(i => i.c.Apellido),
                                            telefono = g.Max(i => i.c.Telefono),
                                            provincia = g.Max(i => i.c.Provincia),
                                            fecha = g.Max(i => i.c.FechaNacimiento),
-                                           id = g.Max(i => i.c.Id)
+                                           id = g.Max(i => i.c.Id),
+                                           tipovacuna = g.Max(i => i.v.Type),
+                                           dosis1 = g.Max(i => i.v.FirstDosis),
+                                           dosis2 = g.Max(i => i.v.SecondDosis)
 
                                        };
                     foreach (var i in querymostrar)
                     {
-
-
+                        diccionario.Clear();
+                        diccionario.Add("nombre", i.nombre);
+                        diccionario.Add("apellido", i.apellido);
                         diccionario.Add("telefono", i.telefono);
                         diccionario.Add("provincia", i.provincia);
                         diccionario.Add("fecha", i.fecha);
                         diccionario.Add("Id", i.id.ToString());
+                        diccionario.Add("vacuna", i.tipovacuna);
+                        diccionario.Add("dosis1", i.dosis1.ToString());
+                        diccionario.Add("dosis2", i.dosis2.ToString());
 
                     }
+                    userVacunas();
 
-
-                    var queryvacunas = from v in db.Vacunas
-                                       where v.IdClient == Int32.Parse(diccionario["Id"])
-                                       group new { v } by new { v.Id } into g
-                                       select new
-                                       {
-                                           vacunas = g.Max(i => i.v.Type),
-                                           dosis1 = g.Max(i => i.v.FirstDosis),
-                                           dosis2 = g.Max(i => i.v.SecondDosis),
-
-                                       };
-
-                    foreach (var i in queryvacunas)
-                    {
-                        var dic = new Dictionary<string, string>();
-                        dic.Add("vacuna", i.vacunas);
-                        dic.Add("dosis1", i.dosis1.ToString());
-                        if (i.dosis2.ToString() == "")
-                        {
-                            dic.Add("dosis2", "No");
-                        }
-                        else
-                        {
-                            dic.Add("dosis2", i.dosis2.ToString());
-                        }
-
-                        datos.Add(dic);
-
-
-
-                    }
-
-                    existe = 1;
                 }
+                else
+                {
+                    existe = "usuarioNoexistente";
+                    ReadApi();
 
-                ReadApi();
-             }
-            else
-            {
-                validacion = 2;
+                }
             }
         }
+
     }
 
     void ReadApi()
@@ -372,6 +381,46 @@ else if (validacion == 2)
 
     }
 
+    void vacunar()
+    {
+        DateTime? resul = null;
+        int id = 0;
+
+        var queryVacunados = from v in db.Vacunas
+                             join c in db.Client on v.IdClient equals c.Id
+                             where c.Cedula == cedula && v.Type == vacuna
+                             group new { c, v } by new { c.Id } into g
+                             select new
+                             {
+                                 id = g.Max(i => i.v.Id),
+                                 dosis2 = g.Max(i => i.v.SecondDosis)
+                             };
+
+
+
+        foreach (var i in queryVacunados)
+        {
+            resul = i.dosis2;
+            id = i.id;
+        }
+
+        if (resul == null && id != 0)
+        {
+            AgregarsecDosisVacunar();
+
+        }
+        else if (!queryVacunados.Any())
+        {
+            agregarprimeradosis();
+        }
+        else
+        {
+            existe = "usuarioLleno";
+        }
+
+    }
+
+
     void Registrar()
     {
         var queryselect = (from c in db.Client
@@ -392,6 +441,12 @@ else if (validacion == 2)
         db.Add(user);
         db.SaveChanges();
 
+        agregarprimeradosis();
+
+    }
+    void agregarprimeradosis()
+    {
+        Vacunas vacunas = new Vacunas();
         var query = from c in db.Client
                     where c.Cedula == cedula
                     group new { c } by new { c.Id } into g
@@ -399,6 +454,7 @@ else if (validacion == 2)
                     {
                         id = g.Max(i => i.c.Id),
                     };
+
 
         vacunas.FirstDosis = first_dosis;
         vacunas.SecondDosis = null;
@@ -412,7 +468,52 @@ else if (validacion == 2)
         vacunas.IdClient = dic["id"];
         db.Add(vacunas);
         db.SaveChanges();
+        userVacunas();
 
     }
-}
+    void AgregarsecDosisVacunar()
+    {
+        Vacunas vacunas = new Vacunas();
+        var queryVacuna = from c in db.Client
+                          join v in db.Vacunas on c.Id equals v.IdClient
+                          where c.Cedula == cedula && v.Type == vacuna
+                          group new { c, v } by new { c.Id } into g
+                          select new
+                          {
+                              id = g.Max(i => i.v.Id),
 
+                          };
+        var dic = new Dictionary<string, int>();
+        foreach (var i in queryVacuna)
+        {
+
+            dic.Add("id", i.id);
+        }
+        var std = db.Vacunas.FirstOrDefault(i => i.Id == dic["id"]);
+        std.SecondDosis = DateTime.Now;
+        db.SaveChanges();
+        userVacunas();
+    }
+
+    void userVacunas()
+    {
+        datos.Clear();
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where c.Cedula == cedula
+                    select new
+                    {
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("vacuna", i.vacuna);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+        }
+    }
+}
