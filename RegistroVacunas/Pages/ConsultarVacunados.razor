@@ -1,0 +1,288 @@
+﻿@page "/ConsultarVacunados"
+
+@using Models;
+
+<h1>consultar vacunados</h1>
+@if (num == 0)
+{
+    <p>Filtrar por:</p>
+}
+
+
+<div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-primary" @onclick="valor1">Nombre</button>
+    <button type="button" class="btn btn-primary" @onclick="valor2">Apellido</button>
+    <button type="button" class="btn btn-primary" @onclick="valor3">Cedula</button>
+</div>
+@if (num == 1)
+{
+    <br />
+    <br />
+    <p>Filtrando por nombre</p>
+    <input type="text" @bind-value="filtrarNombre" />
+    <button class="btn btn-dark" @onclick="filtrarName">Filtrar</button>
+    @if (datos.Any())
+    {
+
+        <table class="table t1able-striped">
+            <thead>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Cedula</th>
+            <th>Telefono</th>
+            <th>Fecha de nacimiento</th>
+            <th>provincia</th>
+            <th>Vacunas</th>
+            <th>Primera dosis</th>
+            <th>Segunda dosis</th>
+
+            </thead>
+            <tbody>
+                @foreach (Dictionary<string, string> diccionario in datos)
+                {
+                    <tr>
+
+                        <td>@filtrarNombre</td>
+                        <td>@diccionario["apellido"]</td>
+                        <td>@diccionario["cedula"]</td>
+                        <td>@diccionario["telefono"]</td>
+                        <td>@diccionario["fechaNacimiento"]</td>
+                        <td>@diccionario["provincia"]</td>
+                        <td>@diccionario["vacuna"]</td>
+                        <td>@diccionario["dosis1"]</td>
+                        <td>@diccionario["dosis2"]</td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    }
+}
+
+
+@if (num == 2)
+{
+    <br />
+    <br />
+    <p>Filtrando por Apellido</p>
+    <input type="text" @bind-value="filtrarApellido" />
+    <button class="btn btn-dark" @onclick="filtrarLastName">Filtrar</button>
+
+    @if (datos.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Cedula</th>
+            <th>Telefono</th>
+            <th>Fecha de nacimiento</th>
+            <th>provincia</th>
+            <th>Vacunas</th>
+            <th>Primera dosis</th>
+            <th>Segunda dosis</th>
+
+            </thead>
+            <tbody>
+                @foreach (Dictionary<string, string> diccionario in datos)
+                {
+                    <tr>
+                        <td>@diccionario["nombre"]</td>
+                        <td>@filtrarApellido</td>
+                        <td>@diccionario["cedula"]</td>
+                        <td>@diccionario["telefono"]</td>
+                        <td>@diccionario["fechaNacimiento"]</td>
+                        <td>@diccionario["provincia"]</td>
+                        <td>@diccionario["vacuna"]</td>
+                        <td>@diccionario["dosis1"]</td>
+                        <td>@diccionario["dosis2"]</td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    }
+}
+
+@if (num == 3)
+{
+    <br />
+    <br />
+    <p>Filtrando por Cedula</p>
+    <input type="text" @bind-value="filtrarCedula" />
+    <button class="btn btn-dark" @onclick="filtraridentificacion">Filtrar</button>
+
+    @if (datos.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Cedula</th>
+            <th>Telefono</th>
+            <th>Fecha de nacimiento</th>
+            <th>provincia</th>
+            <th>Vacunas</th>
+            <th>Primera dosis</th>
+            <th>Segunda dosis</th>
+
+            </thead>
+            <tbody>
+
+                @foreach (Dictionary<string, string> diccionario in datos)
+                {
+                    <tr>
+                        <td>@diccionario["nombre"]</td>
+                        <td>@diccionario["apellido"]</td>
+                        <td>@filtrarCedula</td>
+                        <td>@diccionario["telefono"]</td>
+                        <td>@diccionario["fechaNacimiento"]</td>
+                        <td>@diccionario["provincia"]</td>
+                        <td>@diccionario["vacuna"]</td>
+                        <td>@diccionario["dosis1"]</td>
+                        <td>@diccionario["dosis2"]</td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    }
+}
+
+
+@code{
+    string filtrarNombre;
+    string filtrarCedula;
+    string filtrarApellido;
+    int num;
+    List<Dictionary<string, string>> datos = new List<Dictionary<string, string>>();
+    registro_vacunasContext db = new registro_vacunasContext();
+
+
+    void filtrarName()
+    {
+
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where c.Nombre == filtrarNombre
+                    select new
+                    {
+                        apellido = c.Apellido,
+                        cedula = c.Cedula,
+                        telefono = c.Telefono,
+                        fechaNacimiento = c.FechaNacimiento,
+                        provincia = c.Provincia,
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+
+            dic.Add("apellido", i.apellido);
+            dic.Add("cedula", i.cedula);
+            dic.Add("telefono", i.telefono);
+            dic.Add("fechaNacimiento", i.fechaNacimiento);
+            dic.Add("provincia", i.provincia);
+
+            dic.Add("vacuna", i.vacuna);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+
+        }
+
+    }
+
+    void filtraridentificacion()
+    {
+
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where c.Cedula == filtrarCedula
+                    select new
+                    {
+                        apellido = c.Apellido,
+                        nombre = c.Nombre,
+                        telefono = c.Telefono,
+                        fechaNacimiento = c.FechaNacimiento,
+                        provincia = c.Provincia,
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+
+        foreach (var i in query)
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            dic.Add("apellido", i.apellido);
+            dic.Add("nombre", i.nombre);
+            dic.Add("telefono", i.telefono);
+            dic.Add("fechaNacimiento", i.fechaNacimiento);
+            dic.Add("provincia", i.provincia);
+            dic.Add("vacuna", i.vacuna);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+
+        }
+    }
+
+    void filtrarLastName()
+    {
+
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where c.Apellido == filtrarApellido
+                    select new
+                    {
+                        nombre = c.Nombre,
+                        cedula = c.Cedula,
+                        telefono = c.Telefono,
+                        fechaNacimiento = c.FechaNacimiento,
+                        provincia = c.Provincia,
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            dic.Add("cedula", i.cedula);
+            dic.Add("telefono", i.telefono);
+            dic.Add("fechaNacimiento", i.fechaNacimiento);
+            dic.Add("provincia", i.provincia);
+
+            dic.Add("vacuna", i.vacuna);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+
+        }
+    }
+
+    void valor1()
+    {
+        datos.Clear();
+        num = 1;
+    }
+
+    void valor2()
+    {
+        datos.Clear();
+        num = 2;
+    }
+    void valor3()
+    {
+        datos.Clear();
+        num = 3;
+    }
+
+}
