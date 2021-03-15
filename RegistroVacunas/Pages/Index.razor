@@ -29,51 +29,19 @@
             <p>
                 Vacuna  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" @bind="vacuna">
                     <option selected>Vacunas</option>
-                    <option value="Sarampion">Sarampion</option>
-                    <option value="Rotavirus">Rotavirus</option>
-                    <option value="viruela">Viruela</option>
-                    <option value="Fiebre amarilla">Fiebre Amarilla</option>
-                    <option value="Rabia">Rabia</option>
-                    <option value="Polio">Polio</option>
-                    <option value="Gripe">gripe</option>
-                    <option value="Hepatitis A">Hepatitis A</option>
+                    @foreach (Dictionary<string, string> diccionario in datosVacunas)
+                    {
+                        <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                    }
                 </select>
             </p>
             <p>
                 Provincia: <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="provincia">
                     <option selected>Provincias</option>
-                    <option value="Azua-">Azua</option>
-                    <option value="Bahoruco">Bahoruco</option>
-                    <option value="Barahona">Barahona</option>
-                    <option value="Dajabon">Dajabon</option>
-                    <option value="Distrito Nacional">Distrito Nacional</option>
-                    <option value="Duarte">Duarte</option>
-                    <option value="Elias Piña">Elias Piña</option>
-                    <option value="El Seibo">El Seibo</option>
-                    <option value="Espaillat">Espaillat</option>
-                    <option value="Hato Mayor">Hato Mayor</option>
-                    <option value="Hermanas Mirabal">Hermanas Mirabal</option>
-                    <option value="Independencia">Independencia</option>
-                    <option value="La Altagracia">La Altagracia</option>
-                    <option value="La Romana">La Romana</option>
-                    <option value="La Vega">La Vega</option>
-                    <option value="Maria Trinidad Sanchez">Maria Trinidad Sanchez</option>
-                    <option value="Monseñor Nouel">Monseñor Nouel</option>
-                    <option value="Monte Cristi">Monte Cristi</option>
-                    <option value="Monte Plata">Monte Plata</option>
-                    <option value="Pedernales">Pedernales</option>
-                    <option value="Peravia">Peravia</option>
-                    <option value="Puerto Plata">Puerto Plata</option>
-                    <option value="Samana">Samana</option>
-                    <option value="Sanchez Ramirez">Sanchez Ramirez</option>
-                    <option value="San Cristobal">San Cristobal</option>
-                    <option value="San Jose de Ocoa">San Jose de Ocoa</option>
-                    <option value="3">San Juan</option>
-                    <option value="San Juan">San Pedro de Macoris</option>
-                    <option value="Santiago">Santiago</option>
-                    <option value="Santiago Rodrigez">Santiago Rodrigez</option>
-                    <option value="Santo Domingo">Santo Domingo</option>
-                    <option value="Valverde">Valverde</option>
+                    @foreach (Dictionary<string, string> diccionario in datosProvincia)
+                    {
+                        <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                    }
 
                 </select>
             </p>
@@ -95,51 +63,20 @@
             <p>
                 Vacuna<select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="vacuna">
                     <option selected>Vacunado</option>
-                    <option value="Sarampion">Sarampion</option>
-                    <option value="Rotavirus">Rotavirus</option>
-                    <option value="viruela">Viruela</option>
-                    <option value="Fiebre amarilla">Fiebre Amarilla</option>
-                    <option value="Rabia">Rabia</option>
-                    <option value="Polio">Polio</option>
-                    <option value="Gripe">gripe</option>
-                    <option value="Hepatitis A">Hepatitis A</option>
+                    @foreach (Dictionary<string, string> diccionario in datosVacunas)
+                    {
+                        <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                    }
                 </select>
             </p>
             <p>
                 <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="provincia">
                     <option selected>Provincias</option>
-                    <option value="Azua-">Azua</option>
-                    <option value="Bahoruco">Bahoruco</option>
-                    <option value="Barahona">Barahona</option>
-                    <option value="Dajabon">Dajabon</option>
-                    <option value="Distrito Nacional">Distrito Nacional</option>
-                    <option value="Duarte">Duarte</option>
-                    <option value="Elias Piña">Elias Piña</option>
-                    <option value="El Seibo">El Seibo</option>
-                    <option value="Espaillat">Espaillat</option>
-                    <option value="Hato Mayor">Hato Mayor</option>
-                    <option value="Hermanas Mirabal">Hermanas Mirabal</option>
-                    <option value="Independencia">Independencia</option>
-                    <option value="La Altagracia">La Altagracia</option>
-                    <option value="La Romana">La Romana</option>
-                    <option value="La Vega">La Vega</option>
-                    <option value="Maria Trinidad Sanchez">Maria Trinidad Sanchez</option>
-                    <option value="Monseñor Nouel">Monseñor Nouel</option>
-                    <option value="Monte Cristi">Monte Cristi</option>
-                    <option value="Monte Plata">Monte Plata</option>
-                    <option value="Pedernales">Pedernales</option>
-                    <option value="Peravia">Peravia</option>
-                    <option value="Puerto Plata">Puerto Plata</option>
-                    <option value="Samana">Samana</option>
-                    <option value="Sanchez Ramirez">Sanchez Ramirez</option>
-                    <option value="San Cristobal">San Cristobal</option>
-                    <option value="San Jose de Ocoa">San Jose de Ocoa</option>
-                    <option value="3">San Juan</option>
-                    <option value="San Juan">San Pedro de Macoris</option>
-                    <option value="Santiago">Santiago</option>
-                    <option value="Santiago Rodrigez">Santiago Rodrigez</option>
-                    <option value="Santo Domingo">Santo Domingo</option>
-                    <option value="Valverde">Valverde</option>
+                    @foreach (Dictionary<string, string> diccionario in datosProvincia)
+                    {
+                        <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                    }
+
 
                 </select>
             </p>
@@ -150,7 +87,7 @@
     }
     else if (existe == "usuarioFalta2daSDosis")
     {
-        <h2>@diccionario["nombre"] @diccionario["apellido"] @cedula</h2>
+        <h2>@diccionario["nombre"] @diccionario["apellido"] @diccionario["cedula"]</h2>
 
         <p>Telefono: @diccionario["telefono"]</p>
         <p>Provincia: @diccionario["provincia"]</p>
@@ -236,8 +173,11 @@ else if (validacion == 2)
     registro_vacunasContext db = new registro_vacunasContext();
     Client user = new Client();
 
+    List<Dictionary<string, string>> datosProvincia;
+    List<Dictionary<string, string>> datosVacunas;
+
     Dictionary<string, string> diccionario = new Dictionary<string, string>();
-    List<Dictionary<string, string>> datos = new List<Dictionary<string, string>>();
+    List<Dictionary<string, string>> datos;
 
     string cedula;
     int producto;
@@ -334,6 +274,7 @@ else if (validacion == 2)
                                        select new
                                        {
                                            nombre = g.Max(i => i.c.Nombre),
+                                           cedula = g.Max(i => i.c.Cedula),
                                            apellido = g.Max(i => i.c.Apellido),
                                            telefono = g.Max(i => i.c.Telefono),
                                            provincia = g.Max(i => i.c.Provincia),
@@ -348,6 +289,7 @@ else if (validacion == 2)
                     {
                         diccionario.Clear();
                         diccionario.Add("nombre", i.nombre);
+                        diccionario.Add("cedula", i.cedula);
                         diccionario.Add("apellido", i.apellido);
                         diccionario.Add("telefono", i.telefono);
                         diccionario.Add("provincia", i.provincia);
@@ -519,7 +461,7 @@ else if (validacion == 2)
 
     void userVacunas()
     {
-        datos.Clear();
+        datos = new List<Dictionary<string, string>>();
         var query = from c in db.Client
                     join v in db.Vacunas on c.Id equals v.IdClient
                     where c.Cedula == cedula
@@ -538,4 +480,48 @@ else if (validacion == 2)
             datos.Add(dic);
         }
     }
+
+    void provincias()
+    {
+        datosProvincia = new List<Dictionary<string, string>>();
+        var queryProvincias = from p in db.Provincias
+                              select new
+                              {
+                                  nombre = p.Nombre
+                              };
+
+        foreach (var i in queryProvincias)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            datosProvincia.Add(dic);
+        }
+
+    }
+
+    void VacunasExistentes()
+    {
+        datosVacunas = new List<Dictionary<string, string>>();
+        var queryVacuna = from v in db.VacunasExistentes
+                          select new
+                          {
+                              nombre = v.Nombre
+                          };
+
+        foreach (var i in queryVacuna)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            datosVacunas.Add(dic);
+        }
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        provincias();
+        VacunasExistentes();
+    }
+
+
 }

@@ -20,7 +20,9 @@ namespace RegistroVacunas.Models
         }
 
         public virtual DbSet<Client> Client { get; set; }
+        public virtual DbSet<Provincias> Provincias { get; set; }
         public virtual DbSet<Vacunas> Vacunas { get; set; }
+        public virtual DbSet<VacunasExistentes> VacunasExistentes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -77,6 +79,19 @@ namespace RegistroVacunas.Models
                     .HasCollation("utf8mb4_general_ci");
             });
 
+            modelBuilder.Entity<Provincias>(entity =>
+            {
+                entity.ToTable("provincias");
+
+                entity.Property(e => e.Id).HasColumnType("int(50)");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasColumnType("text")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+            });
+
             modelBuilder.Entity<Vacunas>(entity =>
             {
                 entity.ToTable("vacunas");
@@ -106,6 +121,19 @@ namespace RegistroVacunas.Models
                     .HasForeignKey(d => d.IdClient)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Id_cliente");
+            });
+
+            modelBuilder.Entity<VacunasExistentes>(entity =>
+            {
+                entity.ToTable("vacunas_existentes");
+
+                entity.Property(e => e.Id).HasColumnType("int(50)");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasColumnType("text")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
             });
 
             OnModelCreatingPartial(modelBuilder);
