@@ -16,6 +16,11 @@
     {
         if (nombre != "")
         {
+            <br />
+            @if (registradoExitosamente == "si")
+            {
+                <p class="alert-info"> Se a registrado exitosamente</p>
+            }
             <p>Nombre: @nombre</p>
             <p>Apellido: @apellido</p>
             <p>cedula: @cedula</p>
@@ -73,9 +78,15 @@
                 </select>
             </p>
             <button class="btn btn-secondary" @onclick="Registrar">Registrar</button>
+
         }
         else
         {
+
+            @if (registradoExitosamente == "si")
+            {
+                <p class="alert-info"> Se a registrado exitosamente</p>
+            }
             <p>cedula: @cedula</p>
             <p>Digite su nombre: <input type="text" @bind="@nombre"></p>
             <p>Digite su Apellido: <input type="text" @bind="@apellido"></p>
@@ -180,6 +191,11 @@
         </p>
         <button class="btn btn-secondary" @onclick="vacunar">Registrar</button>
 
+        @if (registradoExitosamente == "si")
+        {
+            <p class="alert-info"> Se a registrado exitosamente</p>
+        }
+
     }
     else if (existe == "usuarioLleno")
     {
@@ -216,6 +232,7 @@ else if (validacion == 2)
 
 @code {
     string existe;
+    string registradoExitosamente = "no";
     registro_vacunasContext db = new registro_vacunasContext();
     Client user = new Client();
 
@@ -420,7 +437,6 @@ else if (validacion == 2)
 
     }
 
-
     void Registrar()
     {
         var queryselect = (from c in db.Client
@@ -444,6 +460,7 @@ else if (validacion == 2)
         agregarprimeradosis();
 
     }
+
     void agregarprimeradosis()
     {
         Vacunas vacunas = new Vacunas();
@@ -470,7 +487,11 @@ else if (validacion == 2)
         db.SaveChanges();
         userVacunas();
 
+        registradoExitosamente = "si";
+
+
     }
+
     void AgregarsecDosisVacunar()
     {
         Vacunas vacunas = new Vacunas();
@@ -493,6 +514,7 @@ else if (validacion == 2)
         std.SecondDosis = DateTime.Now;
         db.SaveChanges();
         userVacunas();
+        registradoExitosamente = "si";
     }
 
     void userVacunas()
