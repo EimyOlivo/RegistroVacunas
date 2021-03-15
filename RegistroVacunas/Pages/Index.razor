@@ -5,10 +5,10 @@
 @using RegistroVacunas.Data;
 @using Newtonsoft.Json;
 @using Models
+    <h1>Registro de vacunas</h1>
 
-<h1>Registro de vacunas</h1>
+    <p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
-<p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
 @if (validacion == 1)
 {
@@ -171,7 +171,7 @@ else if (validacion == 2)
     string existe;
     string registradoExitosamente = "no";
     registro_vacunasContext db = new registro_vacunasContext();
-    Client user = new Client();
+    Client user;
 
     List<Dictionary<string, string>> datosProvincia;
     List<Dictionary<string, string>> datosVacunas;
@@ -337,6 +337,10 @@ else if (validacion == 2)
         nombre = res.Nombres;
         apellido = res.Apellido1 + " " + res.Apellido2;
         fecha = res.FechaNacimiento.Substring(0, 10);
+        telefono = "";
+        vacuna = "";
+        provincia = "";
+        registradoExitosamente = "no";
 
     }
 
@@ -381,6 +385,7 @@ else if (validacion == 2)
 
     void Registrar()
     {
+        user = new Client();
         var queryselect = (from c in db.Client
                            where c.Cedula == cedula
                            group new { c } by new { c.Id } into g
