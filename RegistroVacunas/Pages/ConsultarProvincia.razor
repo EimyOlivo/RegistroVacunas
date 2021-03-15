@@ -1,0 +1,133 @@
+﻿@page "/ConsultarProvincia"
+
+@using Models;
+
+<h1>Filtrar por provincia</h1>
+
+<p>
+    <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="filtrarprovincia">
+        <option selected>Provincias</option>
+        <option value="Azua-">Azua</option>
+        <option value="Bahoruco">Bahoruco</option>
+        <option value="Barahona">Barahona</option>
+        <option value="Dajabon">Dajabon</option>
+        <option value="Distrito Nacional">Distrito Nacional</option>
+        <option value="Duarte">Duarte</option>
+        <option value="Elias Piña">Elias Piña</option>
+        <option value="El Seibo">El Seibo</option>
+        <option value="Espaillat">Espaillat</option>
+        <option value="Hato Mayor">Hato Mayor</option>
+        <option value="Hermanas Mirabal">Hermanas Mirabal</option>
+        <option value="Independencia">Independencia</option>
+        <option value="La Altagracia">La Altagracia</option>
+        <option value="La Romana">La Romana</option>
+        <option value="La Vega">La Vega</option>
+        <option value="Maria Trinidad Sanchez">Maria Trinidad Sanchez</option>
+        <option value="Monseñor Nouel">Monseñor Nouel</option>
+        <option value="Monte Cristi">Monte Cristi</option>
+        <option value="Monte Plata">Monte Plata</option>
+        <option value="Pedernales">Pedernales</option>
+        <option value="Peravia">Peravia</option>
+        <option value="Puerto Plata">Puerto Plata</option>
+        <option value="Samana">Samana</option>
+        <option value="Sanchez Ramirez">Sanchez Ramirez</option>
+        <option value="San Cristobal">San Cristobal</option>
+        <option value="San Jose de Ocoa">San Jose de Ocoa</option>
+        <option value="3">San Juan</option>
+        <option value="San Juan">San Pedro de Macoris</option>
+        <option value="Santiago">Santiago</option>
+        <option value="Santiago Rodrigez">Santiago Rodrigez</option>
+        <option value="Santo Domingo">Santo Domingo</option>
+        <option value="Valverde">Valverde</option>
+
+    </select>
+</p>
+<button class="btn btn-secondary" @onclick="filtrar">Filtrar</button>
+
+
+@if (datos != null)
+{
+    if (datos.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Cedula</th>
+            <th>Telefono</th>
+            <th>Fecha de nacimiento</th>
+            <th>provincia</th>
+            <th>Vacunas</th>
+            <th>Primera dosis</th>
+            <th>Segunda dosis</th>
+
+            </thead>
+            <tbody>
+                @foreach (Dictionary<string, string> diccionario in datos)
+                {
+                    <tr>
+                        <td>@diccionario["nombre"]</td>
+                        <td>@diccionario["apellido"]</td>
+                        <td>@diccionario["cedula"]</td>
+                        <td>@diccionario["telefono"]</td>
+                        <td>@diccionario["fechaNacimiento"]</td>
+                        <td>@diccionario["provincia"]</td>
+                        <td>@diccionario["vacuna"]</td>
+                        <td>@diccionario["dosis1"]</td>
+                        <td>@diccionario["dosis2"]</td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="alert-danger">No existe contenidos de esa provincia</p>
+    }
+
+}
+
+
+@code {
+    string filtrarprovincia;
+    List<Dictionary<string, string>> datos = null;
+    registro_vacunasContext db = new registro_vacunasContext();
+
+    void filtrar()
+    {
+        datos = new List<Dictionary<string, string>>();
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where c.Provincia == filtrarprovincia
+                    select new
+                    {
+                        nombre = c.Nombre,
+                        apellido = c.Apellido,
+                        cedula = c.Cedula,
+                        telefono = c.Telefono,
+                        provincia = c.Provincia,
+                        fechaNacimiento = c.FechaNacimiento,
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            dic.Add("cedula", i.cedula);
+            dic.Add("telefono", i.telefono);
+            dic.Add("fechaNacimiento", i.fechaNacimiento);
+            dic.Add("apellido", i.apellido);
+            dic.Add("provincia", i.provincia);
+            dic.Add("vacuna", i.vacuna);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+
+        }
+    }
+}
