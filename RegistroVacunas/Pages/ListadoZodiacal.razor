@@ -1,0 +1,102 @@
+﻿@page "/ListadoZodiacal"
+
+@using Models;
+
+<h1>Cantidad de vacunados por signos zodiacales</h1>
+
+
+
+@if (datos != null)
+{
+    if (datos.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <th >Acuario</th>
+                <th >Piscis</th>
+                <th >Aries</th>
+                <th >Tauro</th>
+                <th >Geminis</th>
+                <th >Cancer</th>
+                <th >Leo</th>
+                <th >Virgo</th>
+                <th >Libra</th>
+                <th >Escorpio</th>
+                <th >Sagitario</th>
+                <th >Capricornio</th>
+
+            </thead>
+            <tbody>
+                @foreach (Dictionary<string, string> diccionario in datos)
+                {
+                    <tr>
+                        <td>@diccionario["nombre"]</td>
+                        <td>@diccionario["apellido"]</td>
+                        <td>@diccionario["cedula"]</td>
+                        <td>@diccionario["telefono"]</td>
+                        <td>@diccionario["fechaNacimiento"]</td>
+                        <td>@diccionario["provincia"]</td>
+                        <td>@diccionario["vacuna"]</td>
+                        <td>@diccionario["dosis1"]</td>
+                        <td>@diccionario["dosis2"]</td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <br />
+        <br />
+        <h3 class="alert-danger">No existe contenidos de ese signo zodiacal</h3>
+    }
+
+}
+
+
+@code {
+    string filtrarsigno;
+    List<Dictionary<string, string>> datos = null;
+    registro_vacunasContext db = new registro_vacunasContext();
+
+
+    void filtrar()
+    {
+
+        
+        datos = new List<Dictionary<string, string>>();
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where 
+                    select new
+                    {
+                        nombre = c.Nombre,
+                        apellido = c.Apellido,
+                        cedula = c.Cedula,
+                        telefono = c.Telefono,
+                        provincia = c.Provincia,
+                        fechaNacimiento = c.FechaNacimiento,
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            dic.Add("cedula", i.cedula);
+            dic.Add("telefono", i.telefono);
+            dic.Add("fechaNacimiento", i.fechaNacimiento);
+            dic.Add("apellido", i.apellido);
+            dic.Add("provincia", i.provincia);
+            dic.Add("vacuna", i.vacuna);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+
+        }
+    }
+}
