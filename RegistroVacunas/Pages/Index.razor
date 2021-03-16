@@ -5,10 +5,10 @@
 @using RegistroVacunas.Data;
 @using Newtonsoft.Json;
 @using Models
+    <h1>Registro de vacunas</h1>
 
-<h1>Registro de vacunas</h1>
+    <p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
-<p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
 @if (validacion == 1)
 {
@@ -116,14 +116,10 @@
         <p>
             Vacuna  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" @bind="vacuna">
                 <option selected>Vacunas</option>
-                <option value="Sarampion">Sarampion</option>
-                <option value="Rotavirus">Rotavirus</option>
-                <option value="viruela">Viruela</option>
-                <option value="Fiebre amarilla">Fiebre Amarilla</option>
-                <option value="Rabia">Rabia</option>
-                <option value="Polio">Polio</option>
-                <option value="Gripe">gripe</option>
-                <option value="Hepatitis A">Hepatitis A</option>
+                @foreach (Dictionary<string, string> diccionario in datosVacunas)
+                {
+                    <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                }
             </select>
         </p>
         <button class="btn btn-secondary" @onclick="vacunar">Registrar</button>
@@ -171,7 +167,7 @@ else if (validacion == 2)
     string existe;
     string registradoExitosamente = "no";
     registro_vacunasContext db = new registro_vacunasContext();
-    Client user = new Client();
+    Client user;
 
     List<Dictionary<string, string>> datosProvincia;
     List<Dictionary<string, string>> datosVacunas;
@@ -337,6 +333,10 @@ else if (validacion == 2)
         nombre = res.Nombres;
         apellido = res.Apellido1 + " " + res.Apellido2;
         fecha = res.FechaNacimiento.Substring(0, 10);
+        telefono = "";
+        vacuna = "";
+        provincia = "";
+        registradoExitosamente = "no";
 
     }
 
@@ -381,6 +381,7 @@ else if (validacion == 2)
 
     void Registrar()
     {
+        user = new Client();
         var queryselect = (from c in db.Client
                            where c.Cedula == cedula
                            group new { c } by new { c.Id } into g
@@ -429,6 +430,10 @@ else if (validacion == 2)
         db.SaveChanges();
         userVacunas();
 
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == vacuna);
+        result.cantidad = result.cantidad - 1;
+        db.SaveChanges();
+
         registradoExitosamente = "si";
 
 
@@ -456,6 +461,11 @@ else if (validacion == 2)
         std.SecondDosis = DateTime.Now;
         db.SaveChanges();
         userVacunas();
+
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == vacuna);
+        result.cantidad = result.cantidad - 1;
+        db.SaveChanges();
+
         registradoExitosamente = "si";
     }
 
@@ -503,6 +513,7 @@ else if (validacion == 2)
     {
         datosVacunas = new List<Dictionary<string, string>>();
         var queryVacuna = from v in db.VacunasExistentes
+                          where v.cantidad != 0
                           select new
                           {
                               nombre = v.Nombre
