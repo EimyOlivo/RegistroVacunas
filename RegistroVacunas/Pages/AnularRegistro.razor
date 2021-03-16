@@ -1,0 +1,124 @@
+﻿@page "/AnularRegistro"
+
+
+@using Models;
+
+<h1>Anulación de Registros de Vacunación</h1>
+
+<p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="validarCedula">Buscar</button></p>
+
+
+@if (datos != null)
+{
+    if (datos.Any())
+    {
+
+        <table class="table table-striped">
+            <thead>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Cedula</th>
+            <th>Telefono</th>
+            <th>Fecha de nacimiento</th>
+            <th>provincia</th>
+            <th>Vacunas</th>
+            <th>Primera dosis</th>
+            <th>Segunda dosis</th>
+            <th>ACTION</th>
+
+            </thead>
+            <tbody>
+                @foreach (Dictionary<string, string> diccionario in datos)
+                {
+                    <tr>
+
+                        <td>@diccionario["nombre"]</td>
+                        <td>@diccionario["apellido"]</td>
+                        <td>@diccionario["cedula"]</td>
+                        <td>@diccionario["telefono"]</td>
+                        <td>@diccionario["fechaNacimiento"]</td>
+                        <td>@diccionario["provincia"]</td>
+                        <td>@diccionario["vacuna"]</td>
+                        <td>@diccionario["dosis1"]</td>
+                        <td>@diccionario["dosis2"]</td>
+                        <td><button class="btn btn-danger" @onclick="anularregistro">Anular</button></td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <br />
+        <br />
+        <h3 class="alert-danger">No existe contenido de esta persona</h3>
+    }
+
+}
+
+
+@code {
+
+    string cedula;
+    List<Dictionary<string, string>> datos = null;
+    registro_vacunasContext db = new registro_vacunasContext();
+    Client user;
+    int IDa;
+
+    void validarCedula()
+    {
+        datos = new List<Dictionary<string, string>>();
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where c.Cedula == cedula
+                    select new
+                    {
+                        IDa = c.Id,
+                        nombre = c.Nombre,
+                        apellido = c.Apellido,
+                        cedula = c.Cedula,
+                        telefono = c.Telefono,
+                        provincia = c.Provincia,
+                        fechaNacimiento = c.FechaNacimiento,
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("id", i.IDa.ToString());
+            dic.Add("nombre", i.nombre);
+            dic.Add("cedula", i.cedula);
+            dic.Add("telefono", i.telefono);
+            dic.Add("fechaNacimiento", i.fechaNacimiento);
+            dic.Add("apellido", i.apellido);
+            dic.Add("provincia", i.provincia);
+            dic.Add("vacuna", i.vacuna);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+
+        }
+    }
+
+
+    void anularregistro()
+    {
+        @foreach (Dictionary<string, string> diccionario in datos)
+        {
+            IDa = Convert.ToInt32(diccionario["id"]);
+        }
+
+        db.Client.RemoveRange(db.Client.Where(x => x.Id == IDa));
+        db.Vacunas.RemoveRange(db.Vacunas.Where(x => x.IdClient == IDa));
+        db.SaveChanges();
+        validarCedula();
+
+    }
+    }
+
+
