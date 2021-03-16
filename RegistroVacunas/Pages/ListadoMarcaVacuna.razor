@@ -1,0 +1,105 @@
+﻿@page "/ListadoMarcaVacuna"
+
+@using Models;
+
+<h1>Listado por Marcas de Vacunas </h1>
+
+@if (datos != null)
+{
+    if (datos.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    @foreach (Dictionary<string, string> diccionario in titulos)
+                    {
+
+                        <th>@diccionario["tipo"]</th>
+
+                    }
+                </tr>
+                <tr>
+                    @foreach (Dictionary<string, int> diccionario in datos)
+                    {
+
+                        <td>@diccionario["cantidad"]</td>
+
+                    }
+                </tr>
+
+            </thead>
+        </table>
+
+    }
+}
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        listar();
+    }
+
+    List<Dictionary<string, string>> titulos = null;
+    List<Dictionary<string, int>> datos = null;
+    registro_vacunasContext db = new registro_vacunasContext();
+
+    int cantidad;
+    string tipo;
+    string nombrev;
+    int titu;
+
+    void listar()
+    {
+        titulos = new List<Dictionary<string, string>>();
+        var que = from v in db.Vacunas
+                  group v by v.Type
+                     into g
+                  orderby g.Count() descending
+
+                  select new
+                  {
+                      tipo = g.Key,
+                      cantidad = g.Count()
+                  };
+
+        datos = new List<Dictionary<string, int>>();
+        var query = from v in db.Vacunas
+                    group v by v.Type
+                    into g
+                    orderby g.Count() descending
+
+                    select new
+                    {
+                        tipo = g.Key,
+                        cantidad = g.Count()
+                    };
+
+
+
+        foreach (var i in que)
+        {
+
+
+            var dic = new Dictionary<string, string>();
+            dic.Add("tipo", i.tipo);
+            titulos.Add(dic);
+
+        }
+
+
+
+        foreach (var i in query)
+        {
+
+
+            var dic = new Dictionary<string, int>();
+            dic.Add("cantidad", i.cantidad);
+            datos.Add(dic);
+
+
+        }
+
+
+    }
+}

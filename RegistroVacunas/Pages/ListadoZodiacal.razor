@@ -2,101 +2,187 @@
 
 @using Models;
 
+
 <h1>Cantidad de vacunados por signos zodiacales</h1>
 
+<table class="table table-striped">
+    <thead>
+    <th>Acuario</th>
+    <th>Piscis</th>
+    <th>Aries</th>
+    <th>Tauro</th>
+    <th>Geminis</th>
+    <th>Cancer</th>
+    <th>Leo</th>
+    <th>Virgo</th>
+    <th>Libra</th>
+    <th>Escorpio</th>
+    <th>Sagitario</th>
+    <th>Capricornio</th>
+
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>@Acuario</td>
+            <td>@Piscis</td>
+            <td>@Aries</td>
+            <td>@Tauro</td>
+            <td>@Geminis</td>
+            <td>@Cancer</td>
+            <td>@Leo</td>
+            <td>@Virgo</td>
+            <td>@Libra</td>
+            <td>@Escorpio</td>
+            <td>@Sagitario</td>
+            <td>@Capricornio</td>
+        </tr>
 
 
-@if (datos != null)
-{
-    if (datos.Any())
-    {
-        <table class="table table-striped">
-            <thead>
-                <th >Acuario</th>
-                <th >Piscis</th>
-                <th >Aries</th>
-                <th >Tauro</th>
-                <th >Geminis</th>
-                <th >Cancer</th>
-                <th >Leo</th>
-                <th >Virgo</th>
-                <th >Libra</th>
-                <th >Escorpio</th>
-                <th >Sagitario</th>
-                <th >Capricornio</th>
 
-            </thead>
-            <tbody>
-                @foreach (Dictionary<string, string> diccionario in datos)
-                {
-                    <tr>
-                        <td>@diccionario["nombre"]</td>
-                        <td>@diccionario["apellido"]</td>
-                        <td>@diccionario["cedula"]</td>
-                        <td>@diccionario["telefono"]</td>
-                        <td>@diccionario["fechaNacimiento"]</td>
-                        <td>@diccionario["provincia"]</td>
-                        <td>@diccionario["vacuna"]</td>
-                        <td>@diccionario["dosis1"]</td>
-                        <td>@diccionario["dosis2"]</td>
-                    </tr>
-                }
+    </tbody>
+</table>
 
-
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <br />
-        <br />
-        <h3 class="alert-danger">No existe contenidos de ese signo zodiacal</h3>
-    }
-
-}
 
 
 @code {
-    string filtrarsigno;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        listado();
+    }
+
     List<Dictionary<string, string>> datos = null;
     registro_vacunasContext db = new registro_vacunasContext();
 
+    string signo;
+    int Aries;
+    int Acuario;
+    int Piscis;
+    int Libra;
+    int Tauro;
+    int Capricornio;
+    int Leo;
+    int Cancer;
+    int Geminis;
+    int Sagitario;
+    int Virgo;
+    int Escorpio;
 
-    void filtrar()
+
+
+    string signozodiaco(string dias, string meses)
+    {
+        int dia = Convert.ToInt32(dias);
+        int mes = Convert.ToInt32(meses);
+
+        if ((dia >= 21 && mes == 3) || (dia <= 20 && mes == 4))
+            signo = "Aries";
+        if ((dia >= 24 && mes == 9) || (dia <= 23 && mes == 10))
+            signo = "Libra";
+        if ((dia >= 21 && mes == 4) || (dia <= 21 && mes == 5))
+            signo = "Tauro";
+        if ((dia >= 24 && mes == 10) || (dia <= 22 && mes == 11))
+            signo = "Escorpio";
+        if ((dia >= 22 && mes == 5) || (dia <= 21 && mes == 6))
+            signo = "Geminis";
+        if ((dia >= 23 && mes == 11) || (dia <= 21 && mes == 12))
+            signo = "Sagitario";
+        if ((dia >= 21 && mes == 6) || (dia <= 23 && mes == 7))
+            signo = "Cancer";
+        if ((dia >= 22 && mes == 12) || (dia <= 20 && mes == 1))
+            signo = "Capricornio";
+        if ((dia >= 24 && mes == 7) || (dia <= 23 && mes == 8))
+            signo = "Leo";
+        if ((dia >= 21 && mes == 1) || (dia <= 19 && mes == 2))
+            signo = "Acuario";
+        if ((dia >= 24 && mes == 8) || (dia <= 23 && mes == 9))
+            signo = "Virgo";
+        if ((dia >= 20 && mes == 2) || (dia <= 20 && mes == 3))
+            signo = "Piscis";
+
+        return signo;
+
+    }
+
+    void listado()
     {
 
-        
+
         datos = new List<Dictionary<string, string>>();
         var query = from c in db.Client
-                    join v in db.Vacunas on c.Id equals v.IdClient
-                    
                     select new
                     {
-                        nombre = c.Nombre,
-                        apellido = c.Apellido,
-                        cedula = c.Cedula,
-                        telefono = c.Telefono,
-                        provincia = c.Provincia,
-                        fechaNacimiento = c.FechaNacimiento,
-                        vacuna = v.Type,
-                        dosis1 = v.FirstDosis,
-                        dosis2 = v.SecondDosis
+                        fechaNacimiento = c.FechaNacimiento
                     };
 
         foreach (var i in query)
         {
-            var dic = new Dictionary<string, string>();
-            dic.Add("nombre", i.nombre);
-            dic.Add("cedula", i.cedula);
-            dic.Add("telefono", i.telefono);
-            dic.Add("fechaNacimiento", i.fechaNacimiento);
-            dic.Add("apellido", i.apellido);
-            dic.Add("provincia", i.provincia);
-            dic.Add("vacuna", i.vacuna);
-            dic.Add("dosis1", i.dosis1.ToString());
-            dic.Add("dosis2", i.dosis2.ToString());
-            datos.Add(dic);
+            string dia = i.fechaNacimiento.Substring(8, 2);
+            string mes = i.fechaNacimiento.Substring(5, 2);
+            signozodiaco(dia, mes);
+
+            if (signo == "Aries")
+            {
+                Aries = Aries + 1;
+            }
+            else if (signo == "Libra")
+            {
+                Libra = Libra + 1;
+            }
+            else if (signo == "Tauro")
+            {
+                Tauro = Tauro + 1;
+            }
+            else if (signo == "Escorpio")
+            {
+                Escorpio = Escorpio + 1;
+
+            }
+            else if (signo == "Geminis")
+            {
+                Geminis = Geminis + 1;
+
+            }
+            else if (signo == "Sagitario")
+            {
+                Sagitario = Sagitario + 1;
+
+            }
+            else if (signo == "Cancer")
+            {
+                Cancer = Cancer + 1;
+
+            }
+            else if (signo == "Capricornio")
+            {
+                Capricornio = Capricornio + 1;
+
+            }
+            else if (signo == "Leo")
+            {
+                Leo = Leo + 1;
+
+            }
+            else if (signo == "Acuario")
+            {
+                Acuario = Acuario + 1;
+
+            }
+            else if (signo == "Virgo")
+            {
+                Virgo = Virgo + 1;
+
+            }
+            else if (signo == "Piscis")
+            {
+                Piscis = Piscis + 1;
+
+            }
 
         }
+
+
     }
 }
