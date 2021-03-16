@@ -1,0 +1,288 @@
+﻿@page "/configuracion"
+@using Models;
+
+<h3>Agregar </h3>
+<div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-primary" @onclick="valor1">Vacunas</button>
+    <button type="button" class="btn btn-primary" @onclick="valor2">Provincias</button>
+</div>
+
+@if (num == 1)
+{
+
+    <br />
+    <br />
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary" @onclick="valoragregar">Agregar</button>
+        <button type="button" class="btn btn-primary" @onclick="valoreditar">Editar</button>
+    </div>
+    if (decision == 1)
+    {
+        if (registradoExitosamente == "si")
+        {
+            <br />
+            <br />
+            <p class="alert-info"> Se a registrado exitosamente</p>
+        }
+        else if (registradoExitosamente == "Yaexiste")
+        {
+            <br />
+            <br />
+            <p class="alert-danger"> Ya se ha registrado la vacuna</p>
+        }
+        <br />
+        <br />
+        <p>Tipo de vacuna <input type="text" @bind-value="VacunaPorAgregar" /></p> <p>Cantidad<input type="number" @bind-value="cantidad" /></p>
+        <button class="btn btn-secondary" @onclick="agregar_vacuna">Agregar</button>
+    }
+    else if (decision == 2)
+    {
+        if (registradoExitosamente == "si")
+        {
+            <br />
+            <br />
+            <p class="alert-info"> Se a registrado exitosamente</p>
+        }
+        else if (registradoExitosamente == "Yaexiste")
+        {
+            <br />
+            <br />
+            <p class="alert-danger"> Ya se ha registrado la vacuna</p>
+        }
+        <p>
+            Seleccione la vacuna  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" @bind="VacunaPorAgregar">
+                <option selected>Vacunas</option>
+                @foreach (Dictionary<string, string> diccionario in datosVacunas)
+                {
+                    <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                }
+            </select>
+
+            Digite la cantidad de vacuna que desea agregar<input type="number" @bind-value="cantidad" />
+        </p>
+        <button class="btn btn-secondary" @onclick="AgregarCantidad">Agregar</button>
+    }
+
+}
+else if (num == 2)
+{
+
+    <br />
+    <br />
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary" @onclick="valoragregar">Agregar</button>
+        <button type="button" class="btn btn-primary" @onclick="valoreditar">Editar</button>
+    </div>
+
+    if (decision == 1)
+    {
+        if (registradoExitosamente == "si")
+        {
+            <br />
+            <br />
+            <p class="alert-info"> Se a registrado exitosamente</p>
+        }
+        else if (registradoExitosamente == "Yaexiste")
+        {
+            <br />
+            <br />
+            <p class="alert-danger"> Ya se ha registrado la vacuna</p>
+        }
+        <br />
+        <br />
+        <p>Digiste provincia <input type="text" @bind-value="provinciaporagregar" /></p>
+        <button class="btn btn-secondary" @onclick="agregar_provincia">Agregar</button>
+    }
+
+    else if (decision == 2)
+    {
+        <br />
+        if (registradoExitosamente == "si")
+        {
+            <br />
+            <br />
+            <p class="alert-info"> Se a registrado exitosamente</p>
+        }
+        else if (registradoExitosamente == "Yaexiste")
+        {
+            <br />
+            <br />
+            <p class="alert-danger"> Ya se ha registrado la vacuna</p>
+        }
+        <br />
+        <p>
+            seleccione provincia que quiera editar <select class="form-select form-select-sm" aria-label=".form-select-sm example" @bind="provinciaeditar">
+                <option selected>Provincias</option>
+                @foreach (Dictionary<string, string> diccionario in datosProvincia)
+                {
+                    <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                }
+
+            </select>
+
+            Digite el nuevo nombre<input type="text" @bind-value="provinciaporagregar" />
+        </p>
+        <button class="btn btn-secondary" @onclick="editar_provincia">Agregar</button>
+    }
+
+
+}
+
+
+@code {
+    registro_vacunasContext db = new registro_vacunasContext();
+    VacunasExistentes vacuna;
+    Provincias provicia;
+
+    string provinciaporagregar;
+    string provinciaeditar;
+    List<Dictionary<string, string>> datosVacunas;
+    List<Dictionary<string, string>> datosProvincia;
+    string registradoExitosamente = "no";
+    int cantidad;
+    string VacunaPorAgregar;
+    int num;
+    int decision = 0;
+
+
+
+
+    void agregar_vacuna()
+    {
+        vacuna = new VacunasExistentes();
+
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == VacunaPorAgregar);
+
+        if (result == null)
+        {
+            vacuna.Nombre = VacunaPorAgregar;
+            vacuna.cantidad = cantidad;
+
+            db.Add(vacuna);
+            db.SaveChanges();
+            registradoExitosamente = "si";
+        }
+        else
+        {
+            registradoExitosamente = "Yaexiste";
+        }
+
+
+    }
+
+    void editar_provincia()
+    {
+        provicia = new Provincias();
+
+        var result = db.Provincias.SingleOrDefault(b => b.Nombre == provinciaeditar);
+        result.Nombre = provinciaporagregar;
+        db.SaveChanges();
+
+        registradoExitosamente = "si";
+
+    }
+
+    void provincias()
+    {
+        datosProvincia = new List<Dictionary<string, string>>();
+        var queryProvincias = from p in db.Provincias
+                              select new
+                              {
+                                  nombre = p.Nombre
+                              };
+
+        foreach (var i in queryProvincias)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            datosProvincia.Add(dic);
+        }
+
+    }
+
+    void agregar_provincia()
+    {
+        provicia = new Provincias();
+
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == provinciaporagregar);
+
+        if (result == null)
+        {
+            provicia.Nombre = provinciaporagregar;
+
+            db.Add(provicia);
+            db.SaveChanges();
+            registradoExitosamente = "si";
+        }
+        else
+        {
+            registradoExitosamente = "Yaexiste";
+        }
+    }
+
+    void valor1()
+    {
+        decision = 0;
+        registradoExitosamente = "no";
+        num = 1;
+    }
+
+    void valor2()
+    {
+        decision = 0;
+        registradoExitosamente = "no";
+        num = 2;
+    }
+
+    void valoragregar()
+    {
+        VacunaPorAgregar = "";
+        cantidad = 0;
+        registradoExitosamente = "no";
+        provinciaporagregar = "";
+        decision = 1;
+    }
+
+    void valoreditar()
+    {
+        VacunaPorAgregar = "";
+        cantidad = 0;
+        registradoExitosamente = "no";
+        provinciaporagregar = "";
+        decision = 2;
+    }
+
+    void VacunasExistentes()
+    {
+        datosVacunas = new List<Dictionary<string, string>>();
+        var queryVacuna = from v in db.VacunasExistentes
+                          select new
+                          {
+                              nombre = v.Nombre
+                          };
+
+        foreach (var i in queryVacuna)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            datosVacunas.Add(dic);
+        }
+
+    }
+    void AgregarCantidad()
+    {
+        vacuna = new VacunasExistentes();
+
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == VacunaPorAgregar);
+        result.cantidad = result.cantidad + cantidad;
+        db.SaveChanges();
+
+        registradoExitosamente = "si";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        provincias();
+        VacunasExistentes();
+    }
+}

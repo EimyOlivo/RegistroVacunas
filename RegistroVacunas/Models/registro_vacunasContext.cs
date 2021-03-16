@@ -28,7 +28,7 @@ namespace RegistroVacunas.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("server=localhost;uid=root;pwd=;database=registro_vacunas", x => x.ServerVersion("8.0.18-mysql"));
+                optionsBuilder.UseMySql("server=localhost;uid=root;pwd=mysql;database=registro_vacunas", x => x.ServerVersion("8.0.18-mysql"));
             }
         }
 
