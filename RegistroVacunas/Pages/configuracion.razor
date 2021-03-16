@@ -1,0 +1,66 @@
+﻿@page "/configuracion"
+@using Models;
+
+<h3>Agregar </h3>
+<div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-primary" @onclick="valor1">Vacunas</button>
+    <button type="button" class="btn btn-primary" @onclick="valor1">Provincias</button>
+</div>
+
+@if (num == 1)
+{
+    if (registradoExitosamente == "si")
+    {
+        <p class="alert-info"> Se a registrado exitosamente</p>
+    }else if(registradoExitosamente == "Yaexiste")
+    {
+        <p class="alert-danger"> Ya se ha registrado la vacuna</p>
+    }
+
+    <p>Tipo de vacuna <input type="text" @bind-value="VacunaPorAgregar" /></p> <p>Cantidad<input type="number" @bind-value="cantidad" /></p>
+    <button class="btn btn-secondary" @onclick="agregar_vacuna">Agregar</button>
+}
+
+@code {
+    registro_vacunasContext db = new registro_vacunasContext();
+    VacunasExistentes vacuna;
+    Provincias provicia;
+
+    string registradoExitosamente = "no";
+    int cantidad;
+    string VacunaPorAgregar;
+    int num;
+
+    void valor1()
+    {
+        num = 1;
+    }
+
+    void valor2()
+    {
+        num = 2;
+    }
+
+    void agregar_vacuna()
+    {
+        vacuna = new VacunasExistentes();
+
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == VacunaPorAgregar);
+
+        if(result == null)
+        {
+            vacuna.Nombre = VacunaPorAgregar;
+            vacuna.cantidad = cantidad;
+
+            db.Add(vacuna);
+            db.SaveChanges();
+        }
+
+
+        string registradoExitosamente = "Yaexiste";
+
+
+
+
+    }
+}
