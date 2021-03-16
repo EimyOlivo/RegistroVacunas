@@ -116,14 +116,10 @@
         <p>
             Vacuna  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" @bind="vacuna">
                 <option selected>Vacunas</option>
-                <option value="Sarampion">Sarampion</option>
-                <option value="Rotavirus">Rotavirus</option>
-                <option value="viruela">Viruela</option>
-                <option value="Fiebre amarilla">Fiebre Amarilla</option>
-                <option value="Rabia">Rabia</option>
-                <option value="Polio">Polio</option>
-                <option value="Gripe">gripe</option>
-                <option value="Hepatitis A">Hepatitis A</option>
+                @foreach (Dictionary<string, string> diccionario in datosVacunas)
+                {
+                    <option value="@diccionario["nombre"]">@diccionario["nombre"]</option>
+                }
             </select>
         </p>
         <button class="btn btn-secondary" @onclick="vacunar">Registrar</button>
@@ -434,6 +430,10 @@ else if (validacion == 2)
         db.SaveChanges();
         userVacunas();
 
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == vacuna);
+        result.cantidad = result.cantidad - 1;
+        db.SaveChanges();
+
         registradoExitosamente = "si";
 
 
@@ -461,6 +461,11 @@ else if (validacion == 2)
         std.SecondDosis = DateTime.Now;
         db.SaveChanges();
         userVacunas();
+
+        var result = db.VacunasExistentes.SingleOrDefault(b => b.Nombre == vacuna);
+        result.cantidad = result.cantidad - 1;
+        db.SaveChanges();
+
         registradoExitosamente = "si";
     }
 
@@ -508,6 +513,7 @@ else if (validacion == 2)
     {
         datosVacunas = new List<Dictionary<string, string>>();
         var queryVacuna = from v in db.VacunasExistentes
+                          where v.cantidad != 0
                           select new
                           {
                               nombre = v.Nombre

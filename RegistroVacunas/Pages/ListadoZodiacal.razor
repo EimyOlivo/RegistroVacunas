@@ -69,7 +69,7 @@
         datos = new List<Dictionary<string, string>>();
         var query = from c in db.Client
                     join v in db.Vacunas on c.Id equals v.IdClient
-                    where 
+                    
                     select new
                     {
                         nombre = c.Nombre,
