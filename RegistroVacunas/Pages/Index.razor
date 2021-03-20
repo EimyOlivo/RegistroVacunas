@@ -5,9 +5,9 @@
 @using RegistroVacunas.Data;
 @using Newtonsoft.Json;
 @using Models
-    <h1>Registro de vacunas</h1>
+<h1>Registro de vacunas</h1>
 
-    <p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
+<p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
 
 
 @if (validacion == 1)
@@ -45,6 +45,9 @@
 
                 </select>
             </p>
+            <p>Datos acerca del centro de vacunacion</p>
+            <p>Longitud: <input type="text" @bind-value="lon" />  Latitud: <input type="text" @bind-value="lat" /></p>
+
             <button class="btn btn-secondary" @onclick="Registrar">Registrar</button>
 
         }
@@ -80,6 +83,7 @@
 
                 </select>
             </p>
+            <p>Longitud: <input type="text" @bind-value="lon" />  Latitud: <input type="text" @bind-value="lat" /></p>
             <button class="btn btn-secondary" @onclick="Registrar">Registrar</button>
 
         }
@@ -181,6 +185,8 @@ else if (validacion == 2)
     string subCedula;
     int numCedula;
     int multiplicacion;
+    string lon;
+    string lat;
     int sumatotal;
     string dato;
     string link = "https://api.adamix.net/apec/cedula/";
@@ -419,6 +425,8 @@ else if (validacion == 2)
         vacunas.FirstDosis = first_dosis;
         vacunas.SecondDosis = null;
         vacunas.Type = vacuna;
+        vacunas.Lon = lon;
+        vacunas.Lat = lat;
         var dic = new Dictionary<string, int>();
         foreach (var i in query)
         {

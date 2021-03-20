@@ -15,6 +15,10 @@ namespace RegistroVacunas.Models
         public DateTime FirstDosis { get; set; }
         public DateTime? SecondDosis { get; set; }
 
+        public string Lon { get; set; }
+
+        public string Lat { get; set; }
+
         public virtual Client IdClientNavigation { get; set; }
     }
 }
