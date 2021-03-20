@@ -22,6 +22,10 @@ namespace RegistroVacunas.Models
         public string FechaNacimiento { get; set; }
         public string Provincia { get; set; }
 
+        public string Longitud { get; set; }
+
+        public string latitud { get; set; }
+
         public virtual ICollection<Vacunas> Vacunas { get; set; }
     }
 }

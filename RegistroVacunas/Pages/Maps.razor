@@ -1,0 +1,93 @@
+﻿@page "/maps"
+@using Radzen.Blazor;
+@using Models;
+
+<h3>Maps</h3>
+
+@*<iframe width="600"
+        height="450"
+        style="border:0"
+        loading="lazy"
+        allowfullscreen
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCVbOesqnKJ9Gsjx_30Y1D0W680xUT_uAc&q=18.519085912312047,-69.91492688635317">
+</iframe>*@
+
+<div class="row">
+    <div class="col-xl-6">
+        <RadzenGoogleMap style="height: 400px" Zoom=@zoom Center=@(new GoogleMapPosition() { Lat = 18.512496187844594, Lng = -69.90812689186842 }) MapClick=@OnMapClick MarkerClick=@OnMarkerClick>
+            <Markers>
+
+                @foreach(Dictionary<string, string> diccionario in datos)
+                {
+                    
+                <RadzenGoogleMapMarker Title="London" Label="@diccionario["nombre"]" Position=@(new GoogleMapPosition() { Lat = Double.Parse(@diccionario["lat"]),  Lng =  Double.Parse(@diccionario["lon"]) }) />
+                }
+                
+            </Markers>
+        </RadzenGoogleMap>
+    </div>
+</div>
+
+@code {
+    int zoom = 3;
+    bool showMadridMarker = false;
+    string clickedPosition = "";
+    List<Dictionary<string, string>> datos = null;
+    registro_vacunasContext db = new registro_vacunasContext();
+
+
+    void OnMapClick(GoogleMapClickEventArgs args)
+    {
+        clickedPosition = $"Map clicked LAT: {args.Position.Lat}, LNG : {args.Position.Lng}";
+    }
+
+    void OnMarkerClick(RadzenGoogleMapMarker args)
+    {
+        clickedPosition = $"Map {args.Title} clicked LAT: {args.Position.Lat}, LNG : {args.Position.Lng}";
+    }
+
+    void user()
+    {
+        datos = new List<Dictionary<string, string>>();
+
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    select new
+                    {
+                        nombre = c.Nombre,
+                        apellido = c.Apellido,
+                        fechaNacimiento = c.FechaNacimiento,
+                        telefono = c.Telefono,
+                        cedula = c.Cedula,
+                        provincia = c.Provincia,
+                        vacunas = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis,
+                        lon = c.Longitud,
+                        lat = c.latitud
+                    };
+        foreach (var i in query)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("nombre", i.nombre);
+            dic.Add("apellido", i.apellido);
+            dic.Add("cedula", i.cedula);
+            dic.Add("telefono", i.telefono);
+            dic.Add("fechaNacimiento", i.fechaNacimiento);
+            dic.Add("provincia", i.provincia);
+            dic.Add("lon", i.lon);
+            dic.Add("lat", i.lat);
+
+            dic.Add("vacuna", i.vacunas);
+            dic.Add("dosis1", i.dosis1.ToString());
+            dic.Add("dosis2", i.dosis2.ToString());
+            datos.Add(dic);
+
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        user();
+    }
+}
