@@ -4,10 +4,12 @@
 @using System.Net;
 @using RegistroVacunas.Data;
 @using Newtonsoft.Json;
-@using Models
+@using Models;
+@inject Blazored.Modal.Services.IModalService Modal;
 <h1>Registro de vacunas</h1>
 
 <p>Digite su cedula: <input type="text" @bind-value="@cedula"> <button class="btn btn-primary" @onclick="ValidarCedula">Buscar</button></p>
+
 
 
 @if (validacion == 1)

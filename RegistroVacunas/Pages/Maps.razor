@@ -1,37 +1,55 @@
 ﻿@page "/maps"
 @using Radzen.Blazor;
 @using Models;
-
 <h3>Maps</h3>
 
-@*<iframe width="600"
-        height="450"
-        style="border:0"
-        loading="lazy"
-        allowfullscreen
-        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCVbOesqnKJ9Gsjx_30Y1D0W680xUT_uAc&q=18.519085912312047,-69.91492688635317">
-</iframe>*@
-
+@if(show) { 
+    <div class="modal" tabindex="-1" style="display:block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@modalDatos["nombre"] @modalDatos["apellido"]</h5>
+                </div>
+                <div class="modal-body">
+                    <h3>cedula: @modalDatos["cedula"]</h3>
+                    <h4>Vacuna: @modalDatos["vacuna"]</h4>
+                    <p>Primera dosis: @modalDatos["dosis1"]  segunda dosis: @modalDatos["dosis2"]</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 <div class="row">
     <div class="col-xl-6">
-        <RadzenGoogleMap style="height: 400px" Zoom=@zoom Center=@(new GoogleMapPosition() { Lat = 18.512496187844594, Lng = -69.90812689186842 }) MapClick=@OnMapClick MarkerClick=@OnMarkerClick>
+        <RadzenGoogleMap style="height: 600px"  Zoom=@zoom Center=@(new GoogleMapPosition() { Lat = 18.512496187844594, Lng = -69.90812689186842 }) MapClick=@OnMapClick MarkerClick="@OnMarkerClick">
             <Markers>
-
-                @foreach(Dictionary<string, string> diccionario in datos)
+                @foreach (Dictionary<string, string> diccionario in datos)
                 {
-                    
-                <RadzenGoogleMapMarker Title="London" Label="@diccionario["nombre"]" Position=@(new GoogleMapPosition() { Lat = Double.Parse(@diccionario["lat"]),  Lng =  Double.Parse(@diccionario["lon"]) }) />
+
+                    <RadzenGoogleMapMarker Title="@diccionario["id"]" Label="@diccionario["vacuna"]" Position=@(new GoogleMapPosition() { Lat = Double.Parse(@diccionario["lat"]),  Lng =  Double.Parse(@diccionario["lon"]) }) />
                 }
-                
             </Markers>
+
         </RadzenGoogleMap>
     </div>
 </div>
 
+
 @code {
-    int zoom = 3;
+
+    int id;
+    int zoom = 7;
     bool showMadridMarker = false;
     string clickedPosition = "";
+    int valor;
+    string test = "";
+    string vac = "";
+    bool show = false;
+
+    Dictionary<string, string> modalDatos;
     List<Dictionary<string, string>> datos = null;
     registro_vacunasContext db = new registro_vacunasContext();
 
@@ -43,7 +61,10 @@
 
     void OnMarkerClick(RadzenGoogleMapMarker args)
     {
-        clickedPosition = $"Map {args.Title} clicked LAT: {args.Position.Lat}, LNG : {args.Position.Lng}";
+
+        test = args.Title;
+        vac = args.Label;
+        card(test, vac);
     }
 
     void user()
@@ -54,6 +75,7 @@
                     join v in db.Vacunas on c.Id equals v.IdClient
                     select new
                     {
+                        Id = c.Id,
                         nombre = c.Nombre,
                         apellido = c.Apellido,
                         fechaNacimiento = c.FechaNacimiento,
@@ -70,6 +92,7 @@
         {
             var dic = new Dictionary<string, string>();
             dic.Add("nombre", i.nombre);
+            dic.Add("id", i.Id.ToString());
             dic.Add("apellido", i.apellido);
             dic.Add("cedula", i.cedula);
             dic.Add("telefono", i.telefono);
@@ -86,8 +109,63 @@
         }
     }
 
+
+    void card(string id, string vac)
+    {
+
+
+        modalDatos = new Dictionary<string, string>();
+        var query = from c in db.Client
+                    join v in db.Vacunas on c.Id equals v.IdClient
+                    where c.Id == Int32.Parse(id) && v.Type == vac
+                    select new
+                    {
+
+                        nombre = c.Nombre,
+                        apellido = c.Apellido,
+                        cedula = c.Cedula,
+                        vacuna = v.Type,
+                        dosis1 = v.FirstDosis,
+                        dosis2 = v.SecondDosis
+                    };
+
+        foreach (var i in query)
+        {
+            modalDatos.Add("nombre", i.nombre);
+            modalDatos.Add("apellido", i.apellido);
+            modalDatos.Add("cedula", i.cedula);
+            modalDatos.Add("vacuna", i.vacuna);
+            modalDatos.Add("dosis1", i.dosis1.ToString());
+            if (i.dosis2 != null)
+            {
+                modalDatos.Add("dosis2", i.dosis2.ToString());
+
+            }
+            else
+            {
+                modalDatos.Add("dosis2", "NO");
+            }
+
+
+        }
+        show = true;
+    }
+
+    void map()
+    {
+        valor = 0;
+
+
+
+    }
+    void close()
+    {
+        show = false;
+    }
     protected override async Task OnInitializedAsync()
     {
         user();
     }
+
+
 }
